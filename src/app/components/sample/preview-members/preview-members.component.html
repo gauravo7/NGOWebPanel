@@ -1,0 +1,266 @@
+<div class="d-flex justify-content-end">
+  <button class="btn btn-sm btn-primary" [routerLink]="['/members']">Back</button>
+</div>
+<mat-tab-group [selectedIndex]="0" animationDuration="500ms">
+  <!-- .............Wholoesaler Tab.................................... -->
+  <mat-tab label="Details">
+
+    <div class="container mt-4">
+      <h4 class="mb-3">Member Details</h4>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{{ data.name }}</td>
+
+            <th>Registration No</th>
+            <td>{{ data.regNo }}</td>
+          </tr>
+          <tr>
+
+            <th>Gender</th>
+            <td>
+              {{ data.gender === 1 ? 'Male' : data.gender === 2 ? 'Female' :
+              'Other' }}
+            </td>
+
+            <th>Auto ID</th>
+            <td>{{ data.autoId }}</td>
+          </tr>
+          <tr>
+            <th>Closure</th>
+            <td>
+              {{
+              data.closeType === 0 ? "Live" :
+              data.closeType === 1 ? "Death" :
+              data.closeType === 2 ? "Family Reunite" :
+              data.closeType === 3 ? "Escape / NGO family member" :
+              ""
+              }}
+            </td>
+
+            <th>Closure Remarks</th>
+            <td>{{ data.closeRemarks }}</td>
+
+          </tr>
+
+          <tr>
+            <th>Category</th>
+            <td>{{ data.categoryId?.name }}</td>
+            <th>Place Found</th>
+            <td>{{ data.findLocation }}</td>
+          </tr>
+          <tr>
+            <th>Remarks</th>
+            <td colspan="3">{{ data.remarks }}</td>
+          </tr>
+          <tr>
+            <th>Image</th>
+            <td>
+              <img *ngIf="data.regImage" [src]="BASE_IMAGE_URL+data.regImage"
+                class="img-thumbnail" style="max-width: 150px;">
+            </td>
+            <th>Person's Photos</th>
+            <td>
+              <span *ngFor="let img of data.photos">
+                <img [src]="BASE_IMAGE_URL+img" class="img-thumbnail"
+                  style="max-width: 150px;">\
+              </span>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container mt-4">
+      <h4 class="mb-3">Family Details</h4>
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{{ data?.familyDetail?.name??"" }}</td>
+            <th>Phone</th>
+            <td>{{ data?.familyDetail?.phone??"" }}</td>
+          </tr>
+          <tr>
+            <th>Alternate Phone</th>
+            <td>{{ data?.familyDetail?.anotherPhone??"" }}</td>
+            <th>Address</th>
+            <td>{{ data?.familyDetail?.address??"" }}</td>
+          </tr>
+          <tr>
+            <th>Proof Type</th>
+            <td>{{ data?.familyDetail?.proofType??"" }}</td>
+            <th>Proof No</th>
+            <td>{{ data?.familyDetail?.proofNo??"" }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="container mt-4">
+      <h4 class="mb-3">Finder Person Details</h4>
+
+      <table class="table table-bordered">
+        <tbody>
+          <tr>
+            <th>Name</th>
+            <td>{{ data?.finderPersonDetail?.name }}</td>
+            <th>Phone</th>
+            <td>{{ data?.finderPersonDetail?.phone }}</td>
+          </tr>
+
+          <tr>
+            <th>Alternate Phone</th>
+            <td>{{ data?.finderPersonDetail?.anotherPhone }}</td>
+            <th>Address</th>
+            <td>{{ data?.finderPersonDetail?.address }}</td>
+          </tr>
+          <tr>
+            <th>Proof Type</th>
+            <td>{{ data?.finderPersonDetail?.proofType }}</td>
+            <th>Proof No</th>
+            <td>{{ data?.finderPersonDetail?.proofNo }}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+  </mat-tab>
+
+  <mat-tab label="Medical Logs">
+    <h4 *ngIf="treatmentData.length===0" class="my-2 text-center">No Data Found</h4>
+    <div class="container mt-4">
+      <ul class="timeline">
+        <li *ngFor="let item of treatmentData">
+          <div class="timeline-badge bg-primary"></div>
+
+          <div class="timeline-panel">
+            <div class="timeline-heading">
+              <h5 class="timeline-title">
+                <span class="text-dark">
+                  {{ item.treatmentType === 1 ? 'Treatment'
+                  : item.treatmentType === 2 ? 'Discharge'
+                  : item.treatmentType === 3 ? 'Out for Treatment'
+                  : 'In for Treatment'
+                  }}
+                </span>
+              </h5>
+              <p><small class="text-muted">{{ item.createdAt | date:'medium'
+                  }}</small></p>
+            </div>
+
+            <div class="timeline-body">
+              <p><strong>Doctor:</strong> {{ item.doctorName || '-' }}</p>
+              <p><strong>Ward Incharge:</strong> {{ item.doctorName || '-'
+                }}</p>
+              <p><strong>Remarks:</strong> {{ item.remarks }}</p>
+
+              <div *ngIf="item.reportsImages?.length">
+                <strong>Reports:</strong>
+                <div class="d-flex flex-wrap mt-2">
+                  <img
+                    *ngFor="let img of item.reportsImages"
+                    [src]="img"
+                    class="img-thumbnail me-2 mb-2"
+                    width="100" />
+                </div>
+              </div>
+            </div>
+          </div>
+        </li>
+      </ul>
+    </div>
+
+  </mat-tab>
+
+  <mat-tab label="Categories Logs">
+    <h4 *ngIf="categoryData.length===0" class="my-2 text-center">No Data Found</h4>
+    <ul class="timeline">
+      <li *ngFor="let item of categoryData">
+        <div class="timeline-badge bg-success"></div>
+
+        <div class="timeline-panel">
+          <div class="timeline-heading">
+            <h5 class="timeline-title">
+              <p>{{ item.fromCategoryId?.name || 'NA' }} → {{
+                item.toCategoryId?.name || '-' }} </p>
+            </h5>
+            <p>
+              <small class="text-muted">{{ item.createdAt | date:'medium'
+                }}</small>
+            </p>
+          </div>
+
+          <div class="timeline-body">
+
+            <p><strong>Remarks:</strong> {{ item.remarks || '-' }}</p>
+
+            <p><strong>Added By:</strong> {{ item.addedBy }}</p>
+
+            <div *ngIf="item.reportsImages?.length">
+              <strong>Images:</strong>
+              <div class="d-flex flex-wrap mt-2">
+                <img
+                  *ngFor="let img of item.reportsImages"
+                  [src]="img"
+                  class="img-thumbnail me-2 mb-2"
+                  width="100" />
+              </div>
+            </div>
+          </div>
+        </div>
+      </li>
+    </ul>
+
+  </mat-tab>
+
+  <mat-tab label="Wards Logs">
+
+    <h4 *ngIf="wardData.length===0" class="my-2 text-center">No Data Found</h4>
+    <ul class="timeline">
+      <li *ngFor="let item of wardData">
+        <div class="timeline-badge bg-warning"></div>
+
+        <div class="timeline-panel">
+
+          <!-- DATE ONLY (NO PERSON NAME ON TOP) -->
+          <p class="text-muted">
+            <small>{{ item.createdAt | date:'medium' }}</small>
+          </p>
+
+          <div class="timeline-body">
+
+            <!-- Ward Change -->
+            <p>
+              <strong></strong>
+              {{ item.fromWardId?.name || 'NA' }} →
+              {{ item.toWardId?.name || '-' }}
+            </p>
+
+            <!-- Remarks -->
+            <p><strong>Remarks:</strong> {{ item.remarks || '-' }}</p>
+
+            <!-- Added by -->
+            <p><strong>Added By:</strong> {{ item.addedBy || '-' }}</p>
+
+            <!-- Images -->
+            <div *ngIf="item.reportsImages?.length">
+              <strong>Images:</strong>
+              <div class="d-flex flex-wrap mt-2">
+                <img
+                  *ngFor="let img of item.reportsImages"
+                  [src]="img"
+                  class="img-thumbnail me-2 mb-2"
+                  width="100" />
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </li>
+    </ul>
+
+  </mat-tab>
+  <!-- .............Retailer Tab End.................................... -->
+</mat-tab-group>

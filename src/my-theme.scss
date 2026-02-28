@@ -1,0 +1,10 @@
+@use '@angular/material' as mat;
+@use '@angular/material/core' as mat-core;
+
+@include mat-core.core();
+
+$my-theme: mat-core.define-light-theme((
+  density: -2
+));
+
+@include mat-core.all-component-themes($my-theme);

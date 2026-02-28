@@ -1,0 +1,58 @@
+<div class="auth-wrapper">
+  <div class="auth-content">
+    <div class="auth-bg">
+      <span class="r"></span>
+      <span class="r s"></span>
+      <span class="r s"></span>
+      <span class="r"></span>
+    </div>
+
+    <div class="card">
+      <div class="card-body text-center">
+
+        <!-- Logo -->
+        <div class="mb-1">
+          <img src="/assets/logo2.png" alt="company Logo" width="200px" style="padding: 10px; border-radius: 10px;">
+        </div>
+
+        <h4 class="mb-2">Login</h4>
+
+        <!-- Login Form -->
+        <form [formGroup]="loginForm" (ngSubmit)="submit()">
+
+          <!-- Email Input -->
+          <div class="input-group mb-3">
+            <input type="email" class="form-control" placeholder="Email" formControlName="email" />
+          </div>
+
+          <!-- Password Input -->
+          <div class="input-group mb-1">
+            <input [type]="showPassword" class="form-control" placeholder="Password" formControlName="password" />
+          </div>
+
+          <!-- Password Toggle using @if -->
+          <div class="d-flex justify-content-end text-primary" (click)="toggleShowPassword(showPassword)">
+            @if (showPassword === 'text') {
+            Hide
+            } @else {
+            Show
+            }
+          </div>
+
+          <!-- Submit Button -->
+          <button class="btn btn-primary mb-4" type="submit">Login</button>
+        </form>
+
+        <!-- Reset Password -->
+        <!-- <p class="mb-2 text-muted">
+          Forgot password?
+          <a [routerLink]="['/reset-Password']">Reset</a>
+        </p> -->
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- <footer class=" d-flex justify-content-center py-2">
+  <p class="text-native mb-0" style="background-color: #F4F7FA; color: #BC5C1C;">&copy; 2025 Freebie Nest Private Limited — All rights reserved.</p>
+</footer> -->

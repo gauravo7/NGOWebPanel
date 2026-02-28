@@ -1,0 +1,194 @@
+<!-- Breadcrumb Navigation -->
+<nav aria-label="breadcrumb">
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item">
+            <a routerLink="/dashboard" style="color: #003E53;">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">Categories</li>
+    </ol>
+</nav>
+
+<div class="row">
+    <div class="col-xl-12">
+
+        <!-- Card Wrapper -->
+        <app-card cardTitle="Basic Table" [options]="false" blockClass="table-border-style">
+
+            <!-- Header Section -->
+            <div class="row align-items-center mb-3 gx-2">
+                <div class="col-9 col-md-6">
+                    <h5 class="mb-0 text-dark fw-bold">Sample Categories</h5>
+                </div>
+                <div class="col-3 col-md-6 d-flex justify-content-end" *appHasRole="['CATEGORY-ADD']">
+                    <!-- Add Category Button -->
+                    <button type="button"
+                        class="btn btn-sm btn-primary rounded-2 d-flex align-items-center justify-content-center p-0"
+                        (click)="openModel('Add', null)" style="width: 25px; height: 25px;" title="Add New Category">
+                        <mat-icon fontIcon="add"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <hr class="m-0 p-0" />
+
+            <!-- Search Box -->
+            <div class="row">
+                <div class="col-12">
+                    <mat-form-field class="dense w-100">
+                        <mat-label>Search By Name</mat-label>
+                        <input matInput name="name" (keyup)="onSearchChange($event)" class="w-100" />
+                    </mat-form-field>
+                </div>
+            </div>
+
+            <!-- Table Section -->
+            <div class="table-responsive">
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSource" class="table-bordered table-hover compact-table">
+
+                        <!-- Sr. No Column -->
+                        <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef>Sr. No</th>
+                            <td mat-cell *matCellDef="let row; let index = index">
+                                {{ index + 1 + (paginator.pageIndex * paginator.pageSize) }}
+                            </td>
+                        </ng-container>
+
+
+                            <!-- Sr. No Column -->
+                        <ng-container matColumnDef="autoId">
+                            <th mat-header-cell *matHeaderCellDef>Category ID</th>
+                            <td mat-cell *matCellDef="let row;">
+                               # {{row.categoryAutoId}}
+                            </td>
+                        </ng-container>
+
+                        <!-- Name Column -->
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.name }}
+                            </td>
+                        </ng-container>
+
+                        <!-- Image Column -->
+                        <ng-container matColumnDef="image">
+                            <th mat-header-cell *matHeaderCellDef>Image</th>
+                            <td mat-cell *matCellDef="let element">
+                                <img [src]="getImg(element.trimImage)" alt="Category Image" class="logo-img" />
+                            </td>
+                        </ng-container>
+
+                        <!-- Created At Column -->
+                        <ng-container matColumnDef="createdAt">
+                            <th mat-header-cell *matHeaderCellDef class="text-nowrap">Created At</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.createdAt | date: 'dd/MM/yyyy' }}<br />
+                                <small>{{ element.createdAt | date: 'hh:mm a' }}</small>
+                            </td>
+                        </ng-container>
+
+                        <!-- Updated At Column -->
+                        <ng-container matColumnDef="updatedAt">
+                            <th mat-header-cell *matHeaderCellDef class="text-nowrap">Updated At</th>
+                            <td mat-cell *matCellDef="let element">
+                                {{ element.updatedAt | date: 'dd/MM/yyyy' }}<br />
+                                <small>{{ element.updatedAt | date: 'hh:mm a' }}</small>
+                            </td>
+                        </ng-container>
+
+                        <!-- Status Column -->
+                        <ng-container matColumnDef="isBlocked">
+                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                            <td mat-cell *matCellDef="let element">
+                                <ng-toggle [value]="!element.isBlocked"
+                                    [color]="{ unchecked: '#939da2', checked: '#BC5C1C' }" [width]="30" [height]="15"
+                                    (click)="onToggleClick(element)"></ng-toggle>
+                            </td>
+                        </ng-container>
+
+                        <!-- Conditional Action Column -->
+                        @if (userDataService?.roleMatch(['CATEGORY-EDIT'])) {
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>Action</th>
+                            <td mat-cell *matCellDef="let element">
+                                <button mat-icon-button class="btn btn-sm" (click)="openModel('Edit', element._id)">
+                                    <mat-icon fontIcon="edit" class="c_btn"></mat-icon>
+                                </button>
+                            </td>
+                        </ng-container>
+                        }
+
+                        <!-- Header & Data Rows -->
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="t_head"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+                        <!-- No Data Row -->
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                                No data available
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Pagination -->
+            <mat-paginator #paginator [length]="total" [pageSize]="pageSize" [pageSizeOptions]="[10, 20, 50, 100]"
+                (page)="getAllCategories($event)"></mat-paginator>
+
+        </app-card>
+    </div>
+</div>
+
+<!-- Category Modal -->
+<div class="modal fade" id="categoryModal" tabindex="-1" aria-labelledby="categoryModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+
+            <!-- Modal Header -->
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fs-5 fw-semibold" id="categoryModalLabel">
+                    {{ formType }} Category
+                </h5>
+                <button type="button" class="btn-close" (click)="hideModel()"></button>
+            </div>
+
+            <!-- Modal Body -->
+            <div class="modal-body pt-1">
+                <form [formGroup]="categoryForm" (ngSubmit)="submit()">
+
+                    <!-- Category Name Input -->
+                    <div class="mb-3">
+                        <label class="form-label small text-muted mb-1">Category Name</label>
+                        <input type="text" formControlName="name" class="form-control form-control-sm py-1"
+                            placeholder="Enter Category Name" style="font-size: 0.8rem;" />
+                        @if (
+                        categoryForm.get('name')?.invalid &&
+                        (categoryForm.get('name')?.touched || categoryForm.get('name')?.dirty)
+                        ) {
+                        <small class="text-danger">Name is required</small>
+                        }
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="mb-3">
+                        <label class="form-label small text-muted mb-1">Image</label>
+                        <input type="file" #fileInput (change)="uploadImage($event)"
+                            class="form-control form-control-sm py-1" style="font-size: 0.8rem;" />
+                    </div>
+
+                    <!-- Modal Actions -->
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-sm btn-light" (click)="hideModel()">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary px-3" [disabled]="categoryForm.invalid">
+                            Save
+                        </button>
+                    </div>
+
+                </form>
+            </div>
+
+        </div>
+    </div>
+</div>

@@ -1,0 +1,24 @@
+::ng-deep .mat-mdc-paginator .mat-mdc-form-field-infix {
+  padding: 4px !important;
+  min-height: 30px !important;
+}
+
+::ng-deep .mat-mdc-select-trigger {
+  height: 30px !important;
+}
+
+.clear-icon {
+  margin-left: 6px;
+  font-size: 20px;
+  color: #888;
+  transition: color 0.2s;
+}
+
+.clear-icon:hover {
+  color: #333;
+}
+
+.custom-role-badge {
+  background-color: #BC5C1C !important;
+  color: #fff !important;
+}

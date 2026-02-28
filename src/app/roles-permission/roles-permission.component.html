@@ -1,0 +1,43 @@
+<!-- ROW-1 -->
+<div class="row">
+  <div class="col-md-12 col-lg-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between">
+        <h3 class="card-title">Role List</h3>
+        <button class="btn btn-primary btn-sm" [routerLink]="['/roles/add']">+ Add Role</button>
+      </div>
+      <div class="row ml-2 mt-4 mr-2">
+        <div class="col-md-12" *ngFor="let role of roleData">
+          <div class="card">
+            <div class="card-body text-center">
+              <!-- <blockquote class="quote"> -->
+              <p> <strong>Role Name : </strong> {{role['name']}}</p>
+              <div class="d-flex flex-wrap gap-2 justify-content-center mt-3">
+                @for(per of role['permissions']; track $index) {
+                <span class="badge text-light px-3 py-2" style="background-color: #BC5C1C;">
+                  {{ per }}
+                </span>
+                }
+              </div>
+
+
+              <br>
+              <div class="row d-block mt-2">
+                <small class="text-muted mr-2">
+                  <a class="btn btn-sm btn-outline-primary" [routerLink]="['/roles/edit', role['_id']]">Edit</a>
+                </small>
+                <!-- <small class="mr-2">
+                  <a class="btn btn-sm btn-outline-danger" (click)="openDeleteDialog(role._id)">Delete</a>
+                </small> -->
+
+              </div>
+              <!-- </blockquote> -->
+            </div>
+          </div>
+        </div><!-- COL END -->
+      </div>
+      <!-- table-responsive -->
+    </div>
+  </div>
+</div>
+<!-- ROW-1 CLOSED -->

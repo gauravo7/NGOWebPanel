@@ -1,0 +1,348 @@
+<nav class="d-flex justify-content-between align-items-center mb-2" aria-label="breadcrumb">
+    <ol class="breadcrumb mb-0">
+        <li class="breadcrumb-item">
+            <a routerLink="/dashboard" style="color: #003E53;">Dashboard</a>
+        </li>
+        <li class="breadcrumb-item active" aria-current="page">
+            Sample Issuance to Customers
+        </li>
+    </ol>
+
+    <button class="btn btn-primary btn-sm" (click)="generateExcel()">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+            class="bi bi-file-earmark-spreadsheet-fill" viewBox="0 0 16 16">
+            <path d="M6 12v-2h3v2z" />
+            <path
+                d="M9.293 0H4a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h8a2 2 0 0 0 2-2V4.707A1 1 0 0 0 13.707 4L10 .293A1 1 0 0 0 9.293 0M9.5 3.5v-2l3 3h-2a1 1 0 0 1-1-1M3 9h10v1h-3v2h3v1h-3v2H9v-2H6v2H5v-2H3v-1h2v-2H3z" />
+        </svg>
+        Generate Excel
+    </button>
+</nav>
+
+
+<div class="row compact-content">
+    <div class="col-xl-12">
+        <app-card cardTitle="Basic Table" [options]="false" blockClass="table-border-style">
+
+            <div class="row gx-3 gy-2 align-items-center">
+                <!-- Title -->
+                <div class="col-md-6 col-12">
+                    <h5 class="mb-0 text-dark fw-bold">
+                        Customer Sample Assignment Summary
+                    </h5>
+                </div>
+
+                <!-- Generate + Filter Section -->
+                <div
+                    class="col-md-6 col-12 d-flex justify-content-md-end justify-content-start align-items-center gap-2 flex-wrap">
+                    <mat-form-field class="" (click)="picker.open()">
+                        <mat-label>Filter by Issue Date</mat-label>
+                        <mat-date-range-input [rangePicker]="picker">
+                            <input matStartDate placeholder="Start Date" [(ngModel)]="sampleSearch.startdate"
+                                readonly />
+                            <input matEndDate placeholder="End Date" [(ngModel)]="sampleSearch.enddate"
+                                (dateChange)="getAllSamples(null)" readonly />
+                        </mat-date-range-input>
+                        <div matSuffix class="d-flex align-items-center gap-1">
+                            @if (sampleSearch.startdate || sampleSearch.enddate) {
+                            <mat-icon (click)="clearDateRange()" class="clear-icon"
+                                style="cursor: pointer;">close</mat-icon>
+                            }
+                            @else {
+
+                            <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+                            }
+                        </div>
+                        <mat-date-range-picker #picker></mat-date-range-picker>
+                    </mat-form-field>
+                </div>
+            </div>
+
+
+
+            <hr class="m-0 p-o">
+            <hr class="m-0 p-o">
+            <div class="row align-items-end ">
+                <!-- Company -->
+                @if(!isCompanyLoggedIn){
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="allCompanies" bindLabel="name" bindValue="_id" placeholder=" Filter by Company"
+                        [(ngModel)]="sampleSearch.company" name="company" (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+                }
+                <!-- Issue Type -->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="issuedByOptions" bindLabel="label" bindValue="value"
+                        placeholder="Issued By (Type)" [(ngModel)]="sampleSearch.issuerType" name="issuerType"
+                        (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+
+
+                @if (sampleSearch.issuerType==1) {
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="allWholesalers" bindLabel="distributorId.name" bindValue="distributorId._id"
+                        placeholder="Issued By (Wholesaler)" [(ngModel)]="sampleSearch.issuedByDistributorId1"
+                        name="issuedByDistributorId1" (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+                }
+                @if (sampleSearch.issuerType==2) {
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="allRetailers" bindLabel="distributorId.name" bindValue="distributorId._id"
+                        placeholder="Issued By (Retailer)" [(ngModel)]="sampleSearch.issuedByDistributorId2"
+                        name="issuedByDistributorId2" (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+                }
+                <!-- Gender-->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="genderOptions" bindLabel="label" bindValue="value" placeholder="Gender"
+                        [(ngModel)]="sampleSearch.gender" name="gender" (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+                <!-- Category -->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <ng-select [items]="allCategoriesMini" bindLabel="name" bindValue="_id"
+                        placeholder="Filter by Category" [(ngModel)]="sampleSearch.category" name="category"
+                        (change)="getAllSamples(null)">
+                    </ng-select>
+                </div>
+
+                <!-- Sample Name -->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <mat-form-field class="dense w-100">
+                        <mat-label>Search Sample Name</mat-label>
+                        <input matInput [(ngModel)]="sampleSearch.name" name="name" (input)="onNameInputChange($event)">
+                    </mat-form-field>
+                </div>
+
+                <!-- Barcode -->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <mat-form-field class="dense w-100">
+                        <mat-label>Search Barcode</mat-label>
+                        <input matInput [(ngModel)]="sampleSearch.barCode" name="barCode"
+                            (input)="onBarCodeInputChange($event)">
+                    </mat-form-field>
+                </div>
+
+                <!-- City/State -->
+                <div class="col-6 col-md-3 col-lg-3">
+                    <mat-form-field class="dense w-100">
+                        <mat-label>Search City/State</mat-label>
+                        <input matInput [(ngModel)]="sampleSearch.cityState" name="cityState"
+                            (input)="onCityStateInputChange($event)">
+                    </mat-form-field>
+                </div>
+
+
+            </div>
+
+            <div class="table-responsive">
+                <table mat-table [dataSource]="samplesDataSource" class="mat-table table-bordered compact-table">
+                    <!-- Sr No -->
+                    <ng-container matColumnDef="srno">
+                        <th mat-header-cell *matHeaderCellDef class="text-nowrap">Sr. No</th>
+                        <td mat-cell *matCellDef="let row; let index = index" class="text-center">
+                            {{ index + 1 + (paginator.pageIndex * paginator.pageSize) }}
+                        </td>
+                    </ng-container>
+                    <!-- Company -->
+                    <ng-container matColumnDef="company">
+                        <th mat-header-cell *matHeaderCellDef>Company</th>
+                        <td mat-cell *matCellDef="let e">{{ e.companyId?.name }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="sampleName">
+                        <th mat-header-cell *matHeaderCellDef>Sample</th>
+                        <td mat-cell *matCellDef="let e">
+
+                            <div class="fw-medium">
+                                {{ e.sampleId?.name}}</div>
+                            <small class="text-muted fs-7">{{ e.categoryId?.name }}</small>
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="barcode">
+                        <th mat-header-cell *matHeaderCellDef>Bar code</th>
+                        <td mat-cell *matCellDef="let e">
+                            {{ e.sampleId?.sampleCode}}
+                        </td>
+                    </ng-container>
+                    <!-- Customer Name -->
+                    <ng-container matColumnDef="customerName">
+                        <th mat-header-cell *matHeaderCellDef>Customer</th>
+                        <td mat-cell *matCellDef="let e">
+                            @if(e.customerId?.name){
+                            {{ e.customerId?.name }}
+                            }
+                            @else{
+                            -
+                            }
+
+
+                        </td>
+                    </ng-container>
+
+                    <!-- Phone -->
+                    <ng-container matColumnDef="customerPhone">
+                        <th mat-header-cell *matHeaderCellDef>Contact</th>
+                        <td mat-cell *matCellDef="let e">
+                            @if( e.customerId?.email|| e.customerId?.phone){
+                            <div class="d-flex flex-column gap-1">
+                                @if( e.customerId?.email){
+                                <div>
+                                    <i class="bi bi-envelope-fill me-1 text-secondary"></i> {{
+                                    e.customerId?.email }}
+                                </div>
+                                }
+                                @if( e.customerId?.phone){
+                                <div>
+                                    <i class="bi bi-telephone-fill me-1 text-secondary"></i> {{
+                                    e.customerId?.phone }}
+                                </div>
+                                }
+                            </div>
+                            }
+
+
+                            <!-- @else {
+                            -
+                            } -->
+
+                        </td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="gender">
+                        <th mat-header-cell *matHeaderCellDef>Gender</th>
+                        <td mat-cell *matCellDef="let e">
+
+                            @if(e.customerId?.gender==1){
+                            Male
+                            }
+                            @else if(e.customerId?.gender==2){
+                            Female
+                            }
+                            @else if(e.customerId?.gender==3){
+                            Other
+                            }
+                            @else{
+                            -
+                            }
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="age">
+                        <th mat-header-cell *matHeaderCellDef>Age</th>
+                        <td mat-cell *matCellDef="let e">
+
+                            @if (e?.customerId?.dob) {
+                            {{ calculateAge(e?.customerId?.dob) }}
+                            } @else {
+                            <span class="text-muted">-</span>
+                            }
+
+                        </td>
+                    </ng-container>
+                    <ng-container matColumnDef="address">
+                        <th mat-header-cell *matHeaderCellDef>Address</th>
+                        <td mat-cell *matCellDef="let e" class="text-nowrap"
+                            (click)="e.showCustomerFull = !e.showCustomerFull" style="cursor: pointer;">
+                            <div style="width: 200px; white-space: normal; word-wrap: break-word;"
+                                [title]="e.customerId?.address">
+                                @if (e.customerId?.address || e.customerId?.city || e.customerId?.state) {
+                                @if (!e.showCustomerFull) {
+                                {{ getTruncatedAddress(e.customerId?.address, 4) }},
+                                @if (e.customerId?.city) {
+                                <br />
+                                {{ e.customerId.city }},
+                                }
+                                @if (e.customerId?.state) {
+                                {{ e.customerId.state }}
+                                }
+                                } @else {
+                                {{ e.customerId?.address }},
+                                @if (e.customerId?.city) {
+                                <br />
+                                {{ e.customerId.city }},
+                                }
+                                @if (e.customerId?.state) {
+                                {{ e.customerId.state }}
+                                }
+                                }
+                                } @else {
+                                <span class="text-muted">Not updated</span>
+                                }
+                            </div>
+                        </td>
+
+                    </ng-container>
+
+                    <ng-container matColumnDef="issuedQuantity">
+                        <th mat-header-cell *matHeaderCellDef>Qty Issued</th>
+                        <td mat-cell *matCellDef="let e">{{ e.issuedQuantity }}</td>
+                    </ng-container>
+                    <ng-container matColumnDef="limit">
+                        <th mat-header-cell *matHeaderCellDef>Limit</th>
+                        <td mat-cell *matCellDef="let e">{{ e?.sampleId?.maxIssueQuantityCustomer }}</td>
+                    </ng-container>
+
+                    <!-- Issuer Type -->
+                    <ng-container matColumnDef="issueType">
+                        <th mat-header-cell *matHeaderCellDef>Issued By</th>
+                        <td mat-cell *matCellDef="let e">
+                            @if(e.issuerType === 1){
+                            Wholesaler
+                            }
+                            @else if(e.issuerType === 2){
+                            Retailer
+                            }
+                            @else if(e.issuerType === 3){
+                            Company
+                            }
+                            @else{
+                            -
+                            }
+                        </td>
+                    </ng-container>
+
+                    <!-- Distributor Name -->
+                    <ng-container matColumnDef="distributorName">
+                        <th mat-header-cell *matHeaderCellDef>Distributor</th>
+                        <td mat-cell *matCellDef="let e">{{ e.issuedByDistributorId?.name }}</td>
+                    </ng-container>
+
+                    <ng-container matColumnDef="holdType">
+                        <th mat-header-cell *matHeaderCellDef>By Hold ?</th>
+                        <td mat-cell *matCellDef="let e">
+                            {{ e.issueByHold ? 'Yes' : 'No' }}
+                        </td>
+
+                    </ng-container>
+
+                    <!-- Issued At -->
+                    <ng-container matColumnDef="issuedAt">
+                        <th mat-header-cell *matHeaderCellDef>Issued On</th>
+                        <td mat-cell *matCellDef="let e">
+                            <div>{{ e.issuedAt | date:'dd/MM/yyyy' }}</div>
+                            <small>{{ e.issuedAt | date:'hh:mm a' }}</small>
+                        </td>
+                    </ng-container>
+                    <!-- Header and Row Definitions -->
+                    <tr mat-header-row *matHeaderRowDef="customerSampleDisplayedColumns" class="t_head"></tr>
+                    <tr mat-row *matRowDef="let row; columns: customerSampleDisplayedColumns;"></tr>
+                    <tr class="mat-row" *matNoDataRow>
+                        <td class="mat-cell text-center" [attr.colspan]="customerSampleDisplayedColumns.length">
+                            No data available
+                        </td>
+                    </tr>
+                </table>
+            </div>
+
+            <mat-paginator #paginator [length]="total" [pageSize]="10" [pageSizeOptions]="[10, 20, 50, 100]"
+                (page)="getAllSamples($event)">
+            </mat-paginator>
+
+        </app-card>
+    </div>
+</div>

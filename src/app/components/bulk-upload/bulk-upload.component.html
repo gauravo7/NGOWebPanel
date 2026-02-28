@@ -1,0 +1,51 @@
+<app-card cardTitle="Basic Table" [options]="false"
+  blockClass="table-border-style">
+  <!-- Header Section -->
+  <div class="row align-items-center mb-3 gx-2">
+    <div class="col-9 col-md-6">
+      <h5 class="mb-0 text-dark fw-bold">Upload Members</h5>
+    </div>
+  </div>
+  <hr>
+  <div class="row">
+    <!-- Image Upload Section -->
+    <div class="col-12 mb-4">
+      <div class="section-header"><span class="section-title">Upload File (.xlsx)</span></div>
+      <input type="file" id="file" class="form-control form-control-sm mt-1" accept=".xlsx"
+        multiple  (change)="onFileChange($event)">
+    </div>
+    <div class="col-12 mt-2">
+      <div class="table-responsive">
+        <table *ngIf="jsonData.length"
+          class="table table-bordered table-striped">
+          <thead>
+            <tr>
+              <th *ngFor="let col of getKeys(jsonData[0])">{{ col }}</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <tr *ngFor="let row of jsonData">
+              <td *ngFor="let col of getKeys(jsonData[0])">{{ row[col] }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <div class="col-12 d-flex justify-content-between align-items-center pt-3" *ngIf="jsonData.length>0">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" [formControl]="isCorrect" />
+          <label class="form-check-label small" for="confirmCheckbox">
+            I confirm the details are correct
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-sm px-4 py-1" [disabled]="!isCorrect.value" (click)="submit()">
+          <i class="fas fa-paper-plane me-2"></i>Submit
+        </button>
+      </div>
+
+  </div>
+</app-card>

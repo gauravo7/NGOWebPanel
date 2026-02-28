@@ -1,0 +1,87 @@
+/* Scrollbar Customization for Table */
+.table-responsive::-webkit-scrollbar {
+  height: 1px !important;
+}
+
+.table-responsive::-webkit-scrollbar-thumb {
+  background-color: #ccc !important;
+  border-radius: 1px;
+}
+
+.table-responsive {
+  scrollbar-width: thin !important;
+  scrollbar-color: #ccc transparent !important;
+  font-size: inherit !important;
+}
+
+/* Compact Table Styling */
+.compact-table {
+  font-size: 12px !important;
+}
+
+.compact-table th,
+.compact-table td {
+  font-size: 12px !important;
+  padding: 2px 4px !important;
+  line-height: 1.2 !important;
+  white-space: nowrap !important;
+  border: 1px solid #ccc !important;
+  width: 1% !important;
+}
+
+/* Material Table Overrides */
+.mat-table {
+  table-layout: auto !important;
+  border-collapse: collapse !important;
+}
+
+.mat-header-cell {
+  background-color: #f8f9fa;
+  font-weight: bold !important;
+}
+
+.mat-header-row td[colspan],
+.mat-header-row th[colspan] {
+  border: 1px solid #ccc !important;
+  background-color: #eaeaea !important;
+  font-weight: bold !important;
+  text-align: center !important;
+}
+
+.mat-cell,
+.mat-header-cell {
+  white-space: nowrap !important;
+  width: 1% !important;
+}
+
+/* Text Field Padding Overrides */
+.mdc-text-field {
+  padding: 0 0 !important;
+}
+
+::ng-deep .mdc-text-field {
+  padding: 0 !important;
+}
+
+/* Image and Button Styling */
+.logo-img {
+  border: 2px solid #B0B0B0 !important;
+  width: 35px !important;
+  height: 35px !important;
+  border-radius: 50% !important;
+}
+
+.c_btn {
+  color: #BC5C1C !important;
+  font-size: 15px !important;
+  cursor: pointer !important;
+}
+
+/* Table Header Row */
+.t_head {
+  background-color: #BC5C1C !important;
+  color: white !important;
+  padding: 0 !important;
+}
+
+

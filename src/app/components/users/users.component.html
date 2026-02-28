@@ -1,0 +1,230 @@
+<div class="row">
+    <div class="col-xl-12">
+        <app-card cardTitle="Basic Table" [options]="false" blockClass="table-border-style">
+            <div class="row align-items-center mb-3 gx-2">
+                <div class="col-9 col-md-6">
+                    <h5 class="mb-0 text-dark fw-bold">Users List</h5>
+                </div>
+                <div class="col-3 col-md-6 d-flex justify-content-end">
+                    <button type="button"
+                        class="btn btn-sm btn-primary rounded-2 d-flex align-items-center justify-content-center p-0"
+                        (click)="openModel('Add',null)" style="width: 25px; height: 25px;">
+                        <mat-icon fontIcon="add"></mat-icon>
+                    </button>
+                </div>
+            </div>
+
+            <hr>
+
+            <div class="table-responsive">
+                <div class="mat-elevation-z8">
+                    <table mat-table [dataSource]="dataSource" class="table-bordered compact-table">
+                        <ng-container matColumnDef="position">
+                            <th mat-header-cell *matHeaderCellDef>Sr. No</th>
+                            <td mat-cell *matCellDef="let row; let index = index">
+                                {{ index + 1 + (paginator.pageIndex * paginator.pageSize) }}
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="name">
+                            <th mat-header-cell *matHeaderCellDef>Name</th>
+                            <td mat-cell *matCellDef="let element">{{ element.name }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="email">
+                            <th mat-header-cell *matHeaderCellDef>Email</th>
+                            <td mat-cell *matCellDef="let element">{{ element.email }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="contact">
+                            <th mat-header-cell *matHeaderCellDef>Phone</th>
+                            <td mat-cell *matCellDef="let element">{{ element.phone }}</td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="role">
+                            <th mat-header-cell *matHeaderCellDef>Role</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span [ngClass]="{ 'badge custom-role-badge': element?.role }">
+                                    {{ element?.role ? element.role?.name : "-" }}
+                                </span>
+
+                            </td>
+                        </ng-container>
+                        <ng-container matColumnDef="userType">
+                            <th mat-header-cell *matHeaderCellDef>User Type</th>
+                            <td mat-cell *matCellDef="let element">
+                                <span [ngClass]="{ 'badge custom-role-badge': element?.role }" *ngIf="element.userType===2">
+                                    {{ element?.assignedWard?.name ? element?.assignedWard?.name : "" }}
+                                </span>
+                                <br>
+                                <span class="badge text-white mt-2" [ngClass]="{
+                                    'bg-primary': element.userType === 1,
+                                    'bg-secondary': element.userType === 2,
+                                    'bg-success': element.userType === 3,
+                                    'bg-dark': ![1,2,3].includes(element.userType)
+                                }">
+                                    {{
+                                    element.userType === 1 ? 'Admin' :
+                                    element.userType === 2 ? 'Ward Incharge' :
+                                    element.userType === 3 ? 'Volunteer' :
+                                    element.userType === 4 ? 'Doctor' :"Not Assigned"
+                                    }}
+                                </span>
+
+
+                                <!-- / 1: Admins, 2: Ward Incharge, 3: Volunteer, 4: Doctor -->
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="isBlocked">
+                            <th mat-header-cell *matHeaderCellDef>Status</th>
+                            <td mat-cell *matCellDef="let element">
+                                <ng-toggle [value]="!element.isBlocked"
+                                    [color]="{ unchecked: '#939da2', checked: '#BC5C1C' }"
+                                    (click)="userStatus(element._id, !element.isBlocked)" [width]="30"
+                                    [height]="15"></ng-toggle>
+                            </td>
+                        </ng-container>
+
+                        <ng-container matColumnDef="action">
+                            <th mat-header-cell *matHeaderCellDef>Action</th>
+                            <td mat-cell *matCellDef="let element" class="text-center">
+
+                                <mat-icon fontIcon="edit"  class="c_btn"
+                                    (click)="openModel('Edit', element._id)"></mat-icon>
+
+                            </td>
+                        </ng-container>
+
+                        <tr mat-header-row *matHeaderRowDef="displayedColumns" class="t_head"></tr>
+                        <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+                        <tr class="mat-row" *matNoDataRow>
+                            <td class="mat-cell text-center" [attr.colspan]="displayedColumns.length">
+                                No data available
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+
+            <mat-paginator #paginator [length]="total" [pageSize]="10" (page)="getAllUsers($event)"></mat-paginator>
+        </app-card>
+    </div>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="userModal" tabindex="-1" aria-labelledby="userModalLabel" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header border-0 pb-0">
+                <h5 class="modal-title fs-5 fw-semibold" id="userModalLabel">{{ formType }} User</h5>
+                <button type="button" class="btn-close" (click)="hideModel()"></button>
+            </div>
+            <div class="modal-body pt-1">
+                <form [formGroup]="userForm" (ngSubmit)="submit()">
+                    <div class="row mb-3">
+                        <div class="col-md-6">
+                            <label for="name" class="form-label small text-muted mb-1">Name</label>
+                            <input id="name" type="text" formControlName="name"
+                                class="form-control form-control-sm py-1" placeholder="Enter Name">
+                            @if (userForm.get('name')?.invalid && (userForm.get('name')?.touched ||
+                            userForm.get('name')?.dirty)) {
+                            <small class="text-danger">Name is required</small>
+                            }
+                        </div>
+
+                        <div class="col-md-6">
+                            <label for="phone" class="form-label small text-muted mb-1">Phone</label>
+                            <input id="phone" type="text" formControlName="phone"
+                                class="form-control form-control-sm py-1" placeholder="Enter Phone Number">
+                            @if (userForm.get('phone')?.invalid && (userForm.get('phone')?.touched ||
+                            userForm.get('phone')?.dirty)) {
+                            <small class="text-danger">
+                                @if (userForm.get('phone')?.errors?.['required']) {
+                                Phone number is required
+                                }
+                                @if (userForm.get('phone')?.errors?.['pattern']) {
+                                Enter a valid 10-digit phone number
+                                }
+                            </small>
+                            }
+                        </div>
+                    </div>
+
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-semibold text-muted small">Email</label>
+                        <input type="email" formControlName="email" class="form-control form-control-sm py-1"
+                            placeholder="Enter Email" [readonly]="formType === 'Edit'">
+                        @if (userForm.get('email')?.invalid && (userForm.get('email')?.touched ||
+                        userForm.get('email')?.dirty)) {
+                        <small class="text-danger">Email is required</small>
+                        }
+                    </div>
+
+                    @if (formType !== 'Edit') {
+                    <div class="col-md-12 mb-3">
+                        <label class="form-label fw-semibold text-muted small">Password</label>
+                        <input type="password" formControlName="password" class="form-control form-control-sm py-1"
+                            placeholder="Enter Password">
+                        @if (userForm.get('password')?.invalid && (userForm.get('password')?.touched ||
+                        userForm.get('password')?.dirty)) {
+                        <small class="text-danger">Password is required</small>
+                        }
+                    </div>
+                    }
+
+                    <div class="row">
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="role" class="form-label small text-muted mb-1">Role</label>
+
+                                <ng-select formControlName="role" placeholder="Select Role">
+                                    @for (role of roleList; track role._id) {
+                                    <ng-option [value]="role._id">{{ role.name }}</ng-option>
+                                    }
+                                </ng-select>
+                                @if (userForm.get('role')?.invalid && (userForm.get('role')?.touched ||
+                                userForm.get('role')?.dirty)) {
+                                <small class="text-danger">Role is required</small>
+                                }
+                            </div>
+                        </div>
+                        <div class="col-6">
+                            <div class="mb-3">
+                                <label for="role" class="form-label small text-muted mb-1">User Type</label>
+
+                                <ng-select formControlName="userType" placeholder="Select Type">
+                                    @for (user of userTypeArray; track user.no) {
+                                    <ng-option [value]="user.no">{{ user.name }}</ng-option>
+                                    }
+                                </ng-select>
+                                @if (userForm.get('userType')?.invalid && (userForm.get('userType')?.touched ||
+                                userForm.get('userType')?.dirty)) {
+                                <small class="text-danger">Role is required</small>
+                                }
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="mb-3" *ngIf="this.userForm.value.userType==2">
+                        <label for="role" class="form-label small text-muted mb-1">Wards</label>
+                        <ng-select formControlName="assignedWard" placeholder="Select Wards">
+                            @for (ward of wardData; track ward._id) {
+                            <ng-option [value]="ward._id">{{ ward.name }}</ng-option>
+                            }
+                        </ng-select>
+                        @if (userForm.get('assignedWard')?.invalid && (userForm.get('assignedWard')?.touched || userForm.get('assignedWard')?.dirty)) {
+                            <small class="text-danger">Wards is required</small>
+                        }
+                    </div>
+
+                    <div class="modal-footer border-0 pt-0">
+                        <button type="button" class="btn btn-sm btn-light" (click)="hideModel()">Cancel</button>
+                        <button type="submit" class="btn btn-sm btn-primary px-3"
+                            [disabled]="formType === 'Add' && userForm.invalid">Save</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>

@@ -1,0 +1,18 @@
+@media (max-width: 576px) {
+  .logo-img {
+    max-height: 30px;
+  }
+}
+.b-brand {
+  height: 100%;
+  padding: 0.25rem 0.75rem; /* adjust spacing as needed */
+  text-decoration: none;
+}
+
+.logo-img {
+  max-height: 40px;
+  height: auto;
+  width: auto;
+  object-fit: contain;
+  display: block;
+}

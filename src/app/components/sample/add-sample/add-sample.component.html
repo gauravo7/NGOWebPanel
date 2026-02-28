@@ -1,0 +1,295 @@
+<app-card cardTitle="Basic Table" [options]="false" blockClass="table-border-style">
+  <!-- Header Section -->
+  <div class="row align-items-center mb-3 gx-2">
+    <div class="col-9 col-md-6">
+      <h5 class="mb-0 text-dark fw-bold">Add Sample</h5>
+    </div>
+  </div>
+
+  <hr>
+
+  <!-- Sample Form Starts -->
+  <form [formGroup]="sampleForm" (ngSubmit)="submit()">
+    <div class="row g-3">
+
+      <!-- Category Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold m-0">Choose Category</label>
+        <ng-select [items]="categories" bindLabel="name" bindValue="_id" formControlName="categoryId"
+          placeholder="Select Category"></ng-select>
+        @if (sampleForm.get('categoryId')?.invalid && sampleForm.get('categoryId')?.touched) {
+        <small class="text-danger">Category is required</small>
+        }
+      </div>
+
+      <!-- Sample Name -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Name</span></div>
+        <input type="text" formControlName="name" class="form-control form-control-sm" placeholder="Enter Name">
+        @if (sampleForm.get('name')?.invalid && (sampleForm.get('name')?.touched || sampleForm.get('name')?.dirty)) {
+        <small class="text-danger">Name is required</small>
+        }
+      </div>
+
+      <!-- Bar Code -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Reg Code</span></div>
+        <input type="text" formControlName="regNo" class="form-control form-control-sm" placeholder="Reg Code">
+        @if (sampleForm.get('regNo')?.invalid && sampleForm.get('regNo')?.touched) {
+        <small class="text-danger">Reg. Code is required</small>
+        }
+      </div>
+
+      <!-- Video Title -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Age Range</span></div>
+        <input type="text" formControlName="ageRange" class="form-control form-control-sm" placeholder="Age Range">
+      </div>
+
+      <!-- Video Title -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Height</span></div>
+        <input type="text" formControlName="height" class="form-control form-control-sm" placeholder="Height">
+      </div>
+
+
+         <!-- Video Title -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">find location</span></div>
+        <input type="text" formControlName="findLocation" class="form-control form-control-sm" placeholder="location">
+      </div>
+
+
+        <!-- Category Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold m-0">Ward Category</label>
+        <ng-select [items]="wardCategories" bindLabel="name" bindValue="id" formControlName="isHome"
+          placeholder="Select Category"></ng-select>
+      </div>
+
+          <!-- Category Dropdown -->
+      <div class="col-md-6">
+        <label class="form-label fw-semibold m-0">Gender</label>
+        <ng-select [items]="genders" bindLabel="name" bindValue="id" formControlName="gender"
+          placeholder="Select Category"></ng-select>
+      </div>
+
+
+      <div class="mb-3">
+          <label for="role" class="form-label small text-muted mb-1">Wards</label>
+          <ng-select formControlName="wardId" placeholder="Select Wards">
+              @for (ward of wardData; track ward._id) {
+              <ng-option [value]="ward._id">{{ ward.name }}</ng-option>
+              }
+          </ng-select>
+      </div>
+
+
+          <!-- Video Title -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Remarks</span></div>
+        <textarea rows="4" type="text" formControlName="remarks" class="form-control form-control-sm" placeholder="Height"></textarea>
+      </div>
+
+      <!-- Video Link -->
+      <div class="col-md-6">
+        <div class="section-header"><span class="section-title">Youtube Video Link</span></div>
+        <input type="text" formControlName="videoLink" class="form-control form-control-sm" placeholder="Youtube Link">
+      </div>
+
+
+      <hr>
+
+      <!-- Image Upload Section -->
+      <div class="col-12 mb-4">
+        <div class="section-header"><span class="section-title">Face Image</span></div>
+        <input type="file" id="file" class="form-control form-control-sm mt-1" multiple accept="image/*"  (change)="getFileDetails($event)">
+
+        <!-- Preview List -->
+        <div class="d-flex flex-wrap justify-content-start gap-3 my-1">
+          @for (file of face_image; track $index) {
+          <div class="card shadow-sm" style="width: 120px; border: 1px solid #dee2e6;">
+            @if (file.type.startsWith('image')) {
+            <div class="position-relative" style="height: 100px;">
+              <img [src]="file.url" [alt]="file.name" class="card-img-top img-fluid"
+                style="height: 100%; object-fit: contain; border-bottom: 1px solid #dee2e6;">
+            </div>
+            } @else {
+            <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100px;">
+              <i class="bi bi-file-earmark fs-1 text-muted"></i>
+            </div>
+            }
+            <div class="card-footer bg-white border-top-0 px-2 py-2 d-flex justify-content-between align-items-center">
+              <small class="text-truncate" style="max-width: 70%;" [title]="file.name">{{ file.name }}</small>
+              <button type="button" class="btn btn-sm btn-outline-danger p-0 px-2" (click)="removeFile($index)"
+                title="Delete" aria-label="Delete">&times;</button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+
+       <!-- Image Upload Section -->
+      <div class="col-12 mb-4">
+        <div class="section-header"><span class="section-title">Person Reg Image</span></div>
+        <input type="file" id="file" class="form-control form-control-sm mt-1" multiple accept="image/*"  (change)="getFileDetails1($event)">
+
+        <!-- Preview List -->
+        <div class="d-flex flex-wrap justify-content-start gap-3 my-1">
+          @for (file of personreg_image; track $index) {
+          <div class="card shadow-sm" style="width: 120px; border: 1px solid #dee2e6;">
+            @if (file.type.startsWith('image')) {
+            <div class="position-relative" style="height: 100px;">
+              <img [src]="file.url" [alt]="file.name" class="card-img-top img-fluid"
+                style="height: 100%; object-fit: contain; border-bottom: 1px solid #dee2e6;">
+            </div>
+            } @else {
+            <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100px;">
+              <i class="bi bi-file-earmark fs-1 text-muted"></i>
+            </div>
+            }
+            <div class="card-footer bg-white border-top-0 px-2 py-2 d-flex justify-content-between align-items-center">
+              <small class="text-truncate" style="max-width: 70%;" [title]="file.name">{{ file.name }}</small>
+              <button type="button" class="btn btn-sm btn-outline-danger p-0 px-2" (click)="removeFile($index)"
+                title="Delete" aria-label="Delete">&times;</button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+
+          <!-- Image Upload Section -->
+      <div class="col-12 mb-4">
+        <div class="section-header"><span class="section-title">Person Image</span></div>
+        <input type="file" id="file" class="form-control form-control-sm mt-1" multiple accept="image/*"  (change)="getFileDetails2($event)">
+
+        <!-- Preview List -->
+        <div class="d-flex flex-wrap justify-content-start gap-3 my-1">
+          @for (file of personphoto_image; track $index) {
+          <div class="card shadow-sm" style="width: 120px; border: 1px solid #dee2e6;">
+            @if (file.type.startsWith('image')) {
+            <div class="position-relative" style="height: 100px;">
+              <img [src]="file.url" [alt]="file.name" class="card-img-top img-fluid"
+                style="height: 100%; object-fit: contain; border-bottom: 1px solid #dee2e6;">
+            </div>
+            } @else {
+            <div class="d-flex flex-column justify-content-center align-items-center" style="height: 100px;">
+              <i class="bi bi-file-earmark fs-1 text-muted"></i>
+            </div>
+            }
+            <div class="card-footer bg-white border-top-0 px-2 py-2 d-flex justify-content-between align-items-center">
+              <small class="text-truncate" style="max-width: 70%;" [title]="file.name">{{ file.name }}</small>
+              <button type="button" class="btn btn-sm btn-outline-danger p-0 px-2" (click)="removeFile($index)"
+                title="Delete" aria-label="Delete">&times;</button>
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+
+
+
+
+
+      <div class="col-md-6 d-flex">
+        <input type="checkbox" formControlName="isFinder" class="mx-2">
+        <div class="section-header"><span class="section-title">Finder Exist?</span></div>
+      </div>
+
+
+
+      <div *ngIf="this.sampleForm.value.isFinder" class="row mt-2">
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Name</span></div>
+           <input type="text" formControlName="finderName" class="form-control form-control-sm" placeholder="Finder Name">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Phone</span></div>
+           <input type="number" formControlName="finderNumber" class="form-control form-control-sm" placeholder="Finder Number">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Another Phone</span></div>
+           <input type="number" formControlName="finderAnotherPhone" class="form-control form-control-sm" placeholder="Finder Another Phone">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Proof Type</span></div>
+           <input type="text" formControlName="finderProofType" class="form-control form-control-sm" placeholder="Finder Proof Type">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Proof No</span></div>
+           <input type="number" formControlName="finderProofNo" class="form-control form-control-sm" placeholder="Finder Proof No">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">Finder Address</span></div>
+           <input type="number" formControlName="finderAddress" class="form-control form-control-sm" placeholder="Finder Address">
+        </div>
+      </div>
+
+      <hr>
+
+       <div class="col-md-6 d-flex">
+         <input type="checkbox" formControlName="isFamily" class="mx-2" placeholder="Youtube Link">
+        <div class="section-header"><span class="section-title">is Family Exist</span></div>
+      </div>
+
+
+
+      <div *ngIf="this.sampleForm.value.isFamily" class="row mt-2">
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Name</span></div>
+           <input type="text" formControlName="familyName" class="form-control form-control-sm" placeholder="Family Name">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Phone</span></div>
+           <input type="number" formControlName="familyNumber" class="form-control form-control-sm" placeholder="Family Number">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Another Phone</span></div>
+           <input type="number" formControlName="familyAnotherPhone" class="form-control form-control-sm" placeholder="Family Another Phone">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Proof Type</span></div>
+           <input type="text" formControlName="familyProofType" class="form-control form-control-sm" placeholder="Family Proof Type">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Proof No</span></div>
+           <input type="number" formControlName="familyProofNo" class="form-control form-control-sm" placeholder="Family Proof No">
+        </div>
+
+        <div class="col-4">
+           <div class="section-header"><span class="section-title">family Address</span></div>
+           <input type="number" formControlName="familyAddress" class="form-control form-control-sm" placeholder="Family Address">
+        </div>
+      </div>
+
+
+
+      <!-- Confirmation and Submit -->
+      <div class="col-12 d-flex justify-content-between align-items-center pt-3">
+        <div class="form-check">
+          <input type="checkbox" class="form-check-input" formControlName="confirm" />
+          <label class="form-check-label small" for="confirmCheckbox">
+            I confirm the details are correct
+          </label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-sm px-4 py-1" [disabled]="sampleForm.invalid">
+          <i class="fas fa-paper-plane me-2"></i>Submit
+        </button>
+      </div>
+
+    </div>
+  </form>
+</app-card>

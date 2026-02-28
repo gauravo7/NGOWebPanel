@@ -1,0 +1,27 @@
+<ul class="navbar-nav">
+
+  <li>
+    <div class="dropdown drp-user" ngbDropdown placement="auto">
+      <a href="javascript:" ngbDropdownToggle data-toggle="dropdown">
+        <i class="icon feather icon-user text-light"></i>
+      </a>
+      <div class="dropdown-menu dropdown-menu-end profile-notification" ngbDropdownMenu>
+        <div class="pro-head d-flex align-items-center">
+          <img src="assets/images/user/admin.png" class="img-radius mr-2" alt="User-Profile-Image" />
+          <div>
+            <span class="d-block font-weight-bold">{{ userData?.data?.name }}</span>
+            <small class=" d-block">{{ userData?.data?.email }}</small>
+          </div>
+        </div>
+        <ul class="pro-body">
+          <li>
+            <a href="javascript:" class="dropdown-item" (click)="logout()">
+              <i class="feather icon-lock"></i>
+              Logout
+            </a>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </li>
+</ul>

@@ -1,0 +1,70 @@
+<!-- ROW-1 -->
+<div class="row">
+  <div class="col-12">
+    <div class="card">
+      <div class="card-header d-flex justify-content-between align-items-center">
+        <h3 class="card-title m-0">{{ type }} Role</h3>
+        <button class="btn btn-primary btn-sm" [routerLink]="['/roles']">Role List</button>
+      </div>
+
+      <div class="card-body">
+        <form [formGroup]="roleForm" (ngSubmit)="submit()">
+          <div class="row">
+            <!-- Role Name Input -->
+            <div class="col-md-6 mb-3">
+              <mat-form-field appearance="fill" class="w-100">
+                <mat-label>Role Name</mat-label>
+                <input matInput formControlName="name" placeholder="Enter role name" />
+                <mat-error *ngIf="roleForm.get('name')?.invalid && roleForm.get('name')?.touched">
+                  Role name is required.
+                </mat-error>
+              </mat-form-field>
+            </div>
+
+            <!-- Permission Section Title -->
+            <div class="col-12 mt-3 mb-2">
+              <label class="font-weight-bold">Select Permissions</label>
+            </div>
+
+            <!-- Global Select All -->
+            <div class="col-12 mb-3">
+              <mat-checkbox [checked]="allSelected" (change)="setAll($event.checked)">
+                Select All
+              </mat-checkbox>
+            </div>
+
+            <!-- Permission Sections -->
+            <div *ngFor="let section of items" class="permission-section col-12 mb-4 p-3 border rounded">
+              <h5 class="section-title mb-3">
+                <mat-checkbox
+                  [checked]="isSectionSelected(section)"
+                  (change)="toggleSection(section, $event.checked)">
+                  {{ section.section }} - Select All
+                </mat-checkbox>
+              </h5>
+
+              <div class="row">
+                <div class="col-md-3 col-sm-6 mb-2" *ngFor="let per of section.permissions">
+                  <mat-checkbox
+                    [(ngModel)]="per.checked"
+                    (ngModelChange)="updatePermission(section, per)"
+                    [ngModelOptions]="{ standalone: true }">
+                    {{ per.name }}
+                  </mat-checkbox>
+                </div>
+              </div>
+            </div>
+
+            <!-- Submit Button -->
+            <div class="col-12 text-center mt-4">
+              <button type="submit" mat-flat-button color="primary" class="btn btn-primary" [disabled]="roleForm.invalid">
+                Submit
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- ROW-1 CLOSED -->

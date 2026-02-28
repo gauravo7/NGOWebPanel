@@ -1,0 +1,18 @@
+.table-wrapper {
+  max-height: 300px;
+  overflow-y: auto;
+}
+
+/* Sticky Header */
+.sticky-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fff;    /* Or your header color */
+  z-index: 10;
+}
+
+/* Optional - better look */
+.sticky-table thead th {
+  background: #BC5C1C;
+  color: #fff;
+}
