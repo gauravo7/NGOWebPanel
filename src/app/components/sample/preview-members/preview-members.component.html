@@ -60,11 +60,28 @@
               <img *ngIf="data.regImage" [src]="BASE_IMAGE_URL+data.regImage"
                 class="img-thumbnail" style="max-width: 150px;">
             </td>
+
+            <th>Face Image</th>
+            <td colspan="3"><img *ngIf="data.face_image" 
+               [src]="BASE_IMAGE_URL+data.face_image"
+                class="img-thumbnail" style="max-width: 150px;">
+            </td>
+            
+          </tr>
+
+          <tr>
+            <th>Youtube Link</th>
+            <td>{{data?.videoLink}}</td>
+
+            <th>Things Found</th>
+            <td>{{data?.thingsRemarks}}</td>
+          </tr>
+          <tr>
             <th>Person's Photos</th>
-            <td>
+            <td colspan="3">
               <span *ngFor="let img of data.photos">
                 <img [src]="BASE_IMAGE_URL+img" class="img-thumbnail"
-                  style="max-width: 150px;">\
+                  style="max-width: 150px;">
               </span>
             </td>
           </tr>
@@ -151,10 +168,9 @@
             </div>
 
             <div class="timeline-body">
-              <p><strong>Doctor:</strong> {{ item.doctorName || '-' }}</p>
-              <p><strong>Ward Incharge:</strong> {{ item.doctorName || '-'
-                }}</p>
-              <p><strong>Remarks:</strong> {{ item.remarks }}</p>
+              <p *ngIf="item.doctorName"><strong>Doctor:</strong> {{ item.doctorName || '-' }}</p>
+              <p *ngIf="item.wardIncharge"><strong>Ward Incharge:</strong> {{ item.wardIncharge || '-' }}</p>
+              <p *ngIf="item.remarks"><strong>Remarks:</strong> {{ item.remarks }}</p>
 
               <div *ngIf="item.reportsImages?.length">
                 <strong>Reports:</strong>
@@ -194,9 +210,11 @@
 
           <div class="timeline-body">
 
-            <p><strong>Remarks:</strong> {{ item.remarks || '-' }}</p>
-
             <p><strong>Added By:</strong> {{ item.addedBy }}</p>
+            <p *ngIf="item.doctorName"><strong>Doctor:</strong> {{ item.doctorName || '-' }}</p>
+            <p *ngIf="item.wardIncharge"><strong>Ward Incharge:</strong> {{ item.wardIncharge || '-' }}</p>
+            <p *ngIf="item.remarks"><strong>Remarks:</strong> {{ item.remarks }}</p>
+
 
             <div *ngIf="item.reportsImages?.length">
               <strong>Images:</strong>
@@ -238,11 +256,12 @@
               {{ item.toWardId?.name || '-' }}
             </p>
 
-            <!-- Remarks -->
-            <p><strong>Remarks:</strong> {{ item.remarks || '-' }}</p>
-
             <!-- Added by -->
             <p><strong>Added By:</strong> {{ item.addedBy || '-' }}</p>
+            <p *ngIf="item.doctorName"><strong>Doctor:</strong> {{ item.doctorName || '-' }}</p>
+            <p *ngIf="item.wardIncharge"><strong>Ward Incharge:</strong> {{ item.wardIncharge || '-' }}</p>
+            <p *ngIf="item.remarks"><strong>Remarks:</strong> {{ item.remarks }}</p>
+
 
             <!-- Images -->
             <div *ngIf="item.reportsImages?.length">

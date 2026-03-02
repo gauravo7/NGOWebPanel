@@ -61,7 +61,7 @@ const routes: Routes = [
         component: EditSampleComponent
       },
       {
-        path: 'members/bulk',
+        path: 'upload/bulk',
         component: BulkUploadComponent
       },
       {

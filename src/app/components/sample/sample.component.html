@@ -56,14 +56,14 @@
                 <!-- Sample Name Filter -->
                 <div class="col-12 col-sm-6 col-lg-2">
                     <mat-form-field class="dense w-100">
-                        <mat-label>Reg No</mat-label>
+                        <mat-label>Search by Reg No/Name</mat-label>
                         <input matInput [(ngModel)]="sampleSearch.name" name="name" (input)="onNameInputChange($event)">
                     </mat-form-field>
                 </div>
 
 
                 <!-- Company Filter (only for non-company users) -->
-                  <div class="col-12 col-sm-6 col-lg-2">
+                  <div class="col-12 col-sm-6 col-lg-3">
                       <ng-select [items]="wardData" [disabled]="userType===2" bindLabel="name" bindValue="_id" placeholder="Select Ward" [(ngModel)]="sampleSearch.company" name="company" (change)="sampleFilter($event)">
                       </ng-select>
                   </div>
@@ -202,16 +202,21 @@
                                     </mat-icon>
 
                                     <mat-icon *appHasRole="['CATEGORY-CHANGE']"  aria-hidden="false" aria-label="track_changes icon" fontIcon="track_changes"
-                                        class="c_btn" (click)="openModalAddCategoryChange(element._id)">
+                                        class="c_btn" (click)="openModalAddCategoryChange(element._id,element?.categoryId?._id)">
                                     </mat-icon>
 
                                     <mat-icon *appHasRole="['WARD-CHANGE']"  aria-hidden="false" aria-label="meeting_room icon" fontIcon="meeting_room"
-                                        class="c_btn" (click)="openModalAddWardChange(element._id)">
+                                        class="c_btn" (click)="openModalAddWardChange(element._id,element?.wardId?._id)">
                                     </mat-icon>
 
-                                    <mat-icon *appHasRole="['MEMBER-DISCHARGE']"  aria-hidden="false" aria-label="check_circle icon" fontIcon="check_circle"
-                                        class="c_btn" (click)="openModalAddDischarge(element._id)">
+                                    <mat-icon *appHasRole="['MEMBER-EDIT']"  aria-hidden="false" aria-label="edit icon" fontIcon="edit"
+                                      class="c_btn" [routerLink]="['/members/edit',element?._id]">
                                     </mat-icon>
+                                      <ng-container *ngIf="(element?.closType!==0) && (element?.isAdmit==1)">
+                                        <mat-icon *appHasRole="['MEMBER-DISCHARGE']"  aria-hidden="false" aria-label="check_circle icon" fontIcon="check_circle"
+                                            class="c_btn" (click)="openModalAddDischarge(element._id)">
+                                        </mat-icon>
+                                      </ng-container>
                                 </div>
                             </td>
                         </ng-container>
@@ -675,7 +680,7 @@
 
       <!-- Header -->
       <div class="modal-header py-2 px-3">
-        <h6 class="modal-title fw-semibold">Close Person</h6>
+        <h6 class="modal-title fw-semibold">Case Closure Case</h6>
         <button type="button" class="btn-close" (click)="hideCloseModal()"></button>
       </div>
 
@@ -686,7 +691,7 @@
           <!-- Close Type -->
           <div class="mb-3">
             <label class="form-label fw-medium">
-              Close Type <span class="text-danger">*</span>
+              Case Closure Type <span class="text-danger">*</span>
             </label>
 
             <ng-select

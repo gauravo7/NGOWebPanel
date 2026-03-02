@@ -46,7 +46,7 @@ export class WardsComponent {
     categoryId: any;
     pageSize: number = 10;
     name: any;
-    displayedColumns: string[] = [];
+    displayedColumns: string[] = ['position', 'name','autoId','image', 'createdAt', 'updatedAt'];
     dataSource = new MatTableDataSource<any>([]);
     isCompanyLoggedIn: boolean = false;
     debounceTimer: any = null;

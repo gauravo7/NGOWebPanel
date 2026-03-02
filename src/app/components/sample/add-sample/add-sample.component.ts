@@ -51,14 +51,14 @@ export class AddSampleComponent implements OnInit {
 
   // Reactive form for adding/editing a sample
   sampleForm = new FormGroup({
-    categoryId: new FormControl(null),
+    categoryId: new FormControl(null,[Validators.required]),
     regNo: new FormControl('', [Validators.required]),
     name: new FormControl(''),
     height: new FormControl(''),
     findLocation: new FormControl(""),
-    isHome: new FormControl(''),
-    gender: new FormControl(''),
-    wardId: new FormControl(''),
+    isHome: new FormControl('',[Validators.required]),
+    gender: new FormControl('',[Validators.required]),
+    wardId: new FormControl('',[Validators.required]),
     remarks: new FormControl(""),
     videoLink: new FormControl(""),
     ageRange:new FormControl(""),
@@ -86,6 +86,18 @@ export class AddSampleComponent implements OnInit {
 
   // --------------------- CONSTRUCTOR ---------------------
 
+  filterHome(){
+    const data:any = this.sampleForm?.value?.isHome;
+    console.log(data);
+     if(data===1) {
+      this.fetchWards('Home');
+    } else if(data===2) {
+      this.fetchWards('Hospital');
+    } else {
+      this.fetchWards(undefined);
+    }
+  }
+
   constructor(
     private categoryService: CategoryService,
     private sampleService: SampleService,
@@ -99,7 +111,7 @@ export class AddSampleComponent implements OnInit {
 
   ngOnInit(): void {
     this.getAllCategories();
-    this.fetchWards();
+    this.fetchWards(undefined);
   }
 
   // --------------------- METHODS ---------------------
@@ -295,8 +307,8 @@ getFileDetails2(event: Event) {
 
 
 
-  fetchWards(){
-     this.wardService.allCompanies({}).subscribe({
+  fetchWards(type:any){
+     this.wardService.allCompanies({type:type}).subscribe({
         next: (result) => {
           this.spinner.hide();
           if (result.success) {

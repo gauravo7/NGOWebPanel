@@ -63,7 +63,7 @@ export class SampleComponent {
   wardChangeModal:any;
 
   genders:any = '';
-  genderData = [{name:'Male',id:1},{name:'Female', id:2}];
+  genderData = [{name:'Male',id:1},{name:'Female', id:2},{name:'Others',id:3}];
   homeData = [{name:'Hospital',id:2},{name:'Home', id:1}];
 
   //// 1: Dealth /////  2: Family Reunite ///   3:Escape // 4:family Member
@@ -134,6 +134,7 @@ export class SampleComponent {
   };
 
   isCompanyLoggedIn: boolean = false;
+  categoryId:any = "";
 
   constructor(
     private sampleService: SampleService,
@@ -193,7 +194,7 @@ export class SampleComponent {
 
     this.getAllSamples(null);
     this.getAllCategories();
-    this.fetchWards();
+    this.fetchWards(undefined);
 
   }
 
@@ -333,12 +334,15 @@ export class SampleComponent {
   }
 
 
-  openModalAddCategoryChange(personId:any) {
+  openModalAddCategoryChange(personId:any,categoryId:any) {
+    this.categoryId = categoryId;
+    this.addCategory.patchValue({categoryId:categoryId});
     this.sampleId = personId;
     this.categoryChangeModal.show();
   }
 
-  openModalAddWardChange(personId:any) {
+  openModalAddWardChange(personId:any,wardId:any) {
+    this.addWard.patchValue({wardId:wardId});
     this.sampleId = personId;
     this.wardChangeModal.show();
   }
@@ -416,6 +420,13 @@ export class SampleComponent {
       isHome:this.sampleSearch.isHome || undefined,
       closeType: this.sampleSearch.closeType || undefined
     };
+    if(data.isHome===1) {
+      this.fetchWards('Home');
+    } else if(data.isHome===2) {
+      this.fetchWards('Hospital');
+    } else {
+      this.fetchWards(undefined);
+    }
 
     this.sampleService.allSamples(data).subscribe({
       next: (result) => {
@@ -637,8 +648,8 @@ export class SampleComponent {
     });
   }
 
-  fetchWards(){
-     this.wardService.allCompanies({}).subscribe({
+  fetchWards(type:any){
+     this.wardService.allCompanies({type:type}).subscribe({
         next: (result) => {
           this.spinner.hide();
           if (result.success) {
@@ -760,6 +771,11 @@ submitCloseForm() {
 hideCloseModal(){
   this.dischargeModal.hide();
 }
+
+
+isCategoryDisabled = (item: any) => {
+  return item._id === this.categoryId;
+};
 
 
 

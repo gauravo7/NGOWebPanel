@@ -64,7 +64,7 @@ export const SidebarLinks: any[] = [
     id: 'upload-data',
     title: 'Upload Data',
     type: 'item',
-    url: '/members/bulk',
+    url: '/upload/bulk',
     icon: 'bi bi-truck',
     classes: 'nav-item',
     permissions: ['MEMBER-UPLOAD']

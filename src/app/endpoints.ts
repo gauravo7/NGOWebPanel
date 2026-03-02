@@ -2,10 +2,7 @@
 // export const BASE_IMAGE_URL = "https://sampleapi.ksesystem.com/"
 
 export const BASE_URL = "http://192.168.10.60:5050/admin/";
-export const BASE_IMAGE_URL = "http://192.168.10.60:5050/"
-
-
-
+export const BASE_IMAGE_URL = "http://192.168.10.60:5050/";
 export const PAGELENGTH = 10
 
 export const USER_DATA = "user_data"

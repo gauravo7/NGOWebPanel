@@ -2,7 +2,7 @@
   <!-- Header Section -->
   <div class="row align-items-center mb-3 gx-2">
     <div class="col-9 col-md-6">
-      <h5 class="mb-0 text-dark fw-bold">Add Sample</h5>
+      <h5 class="mb-0 text-dark fw-bold">Add Members</h5>
     </div>
   </div>
 
@@ -63,7 +63,7 @@
         <!-- Category Dropdown -->
       <div class="col-md-6">
         <label class="form-label fw-semibold m-0">Ward Category</label>
-        <ng-select [items]="wardCategories" bindLabel="name" bindValue="id" formControlName="isHome"
+        <ng-select [items]="wardCategories" bindLabel="name" bindValue="id" formControlName="isHome" (change)="filterHome()"
           placeholder="Select Category"></ng-select>
       </div>
 
