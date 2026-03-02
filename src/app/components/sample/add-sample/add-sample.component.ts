@@ -286,7 +286,7 @@ getFileDetails2(event: Event) {
         this.spinner.hide();
         if (res.success) {
           this.toastr.success(res.message, 'Success');
-          this.router.navigate(['/sample']);
+          this.router.navigate(['/members']);
         } else {
           this.toastr.error(res.message, 'Error');
         }
