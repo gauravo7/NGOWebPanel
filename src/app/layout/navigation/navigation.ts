@@ -70,24 +70,24 @@ export const SidebarLinks: any[] = [
     permissions: ['MEMBER-UPLOAD']
   },
 
-  // {
-  //   id: 'Wholesalers',
-  //   title: 'Wholesalers',
-  //   type: 'item',
-  //   url: '/wholesalers',
-  //   icon: 'bi bi-truck',
-  //   classes: 'nav-item',
-  //   permissions: ['WHOLESALER-LIST']
-  // },
-  // {
-  //   id: 'Retailers',
-  //   title: 'Retailers',
-  //   type: 'item',
-  //   url: '/retailers',
-  //   icon: 'bi bi-bag',
-  //   classes: 'nav-item',
-  //   permissions: ['RETAILER-LIST']
-  // },
+  {
+    id: 'Scan Person',
+    title: 'Scan Person',
+    type: 'item',
+    url: '/scanPerson',
+    icon: 'bi bi-upc-scan',
+    classes: 'nav-item',
+    permissions: ['MEMBER-SCAN']
+  },
+  {
+    id: 'MissingPerson',
+    title: 'Missing Person',
+    type: 'item',
+    url: '/missing',
+    icon: 'bi bi-person-slash',
+    classes: 'nav-item',
+    permissions: ['MISSING-LIST']
+  },
   // {
   //   id: 'Customers',
   //   title: 'Customers',

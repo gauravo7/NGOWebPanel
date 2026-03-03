@@ -17,6 +17,8 @@ import { RolesPermissionComponent } from './roles-permission/roles-permission.co
 import { WardsComponent } from './components/wards/wards.component';
 import { PreviewMembersComponent } from './components/sample/preview-members/preview-members.component';
 import { BulkUploadComponent } from './components/bulk-upload/bulk-upload.component';
+import { ScanPersonComponent } from './components/scan-person/scan-person.component';
+import { MissingPersonComponent } from './components/missing-person/missing-person.component';
 
 const routes: Routes = [
   {
@@ -91,6 +93,13 @@ const routes: Routes = [
       {
         path: 'customer/samples/report',
         component: CustomersSamplesReportComponent
+      },
+      {
+        path:'scanPerson',
+        component:ScanPersonComponent
+      },{
+        path:'missing',
+        component:MissingPersonComponent
       }
     ]
   },

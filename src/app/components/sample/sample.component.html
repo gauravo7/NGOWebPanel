@@ -81,7 +81,7 @@
                 </div>
 
                 <!-- Home/Hospital Filter -->
-                <div class="col-12 col-sm-6 col-lg-2">
+                <div class="col-12 col-sm-6 col-lg-1">
                     <ng-select [items]="homeData" bindLabel="name" bindValue="id" placeholder="Home/Hospital" [(ngModel)]="sampleSearch.isHome" name="ishome" (change)="sampleFilter($event)">
                     </ng-select>
                 </div>
@@ -94,6 +94,7 @@
             </div>
 
             <!-- Sample Table -->
+            <h6 class="my-2 text-primary fw-bold">Total Members: <strong>{{total}}</strong></h6>
 
             <div class="table-responsive">
                 <div class="mat-elevation-z8">
@@ -194,26 +195,26 @@
                             <td mat-cell *matCellDef="let element" class="text-center">
                                 <div class="d-flex align-items-center gap-1 justify-content-center flex-nowrap">
 
-                                    <mat-icon *appHasRole="['MEMBER-VIEW']" aria-hidden="false" aria-label="visibility icon" fontIcon="visibility" class="c_btn"  [routerLink]="['/member/view', element._id]">
+                                    <mat-icon matTooltip="View Members" matTooltipPosition="left"  title="View" *appHasRole="['MEMBER-VIEW']" aria-hidden="false" aria-label="visibility icon" fontIcon="visibility" class="c_btn"  [routerLink]="['/member/view', element._id]">
                                     </mat-icon>
 
-                                    <mat-icon *appHasRole="['MEMBER-ADD-TREATMENT']"  aria-hidden="false" aria-label="local_hospital icon" fontIcon="local_hospital"
+                                    <mat-icon matTooltip="Add Treatment" matTooltipPosition="left"  title="Add Treatment" *appHasRole="['MEMBER-ADD-TREATMENT']"  aria-hidden="false" aria-label="local_hospital icon" fontIcon="local_hospital"
                                         class="c_btn" (click)="openModalAddTreatment(element._id)">
                                     </mat-icon>
 
-                                    <mat-icon *appHasRole="['CATEGORY-CHANGE']"  aria-hidden="false" aria-label="track_changes icon" fontIcon="track_changes"
+                                    <mat-icon matTooltip="Category Change"  matTooltipPosition="left" title="Category Change" *appHasRole="['CATEGORY-CHANGE']"  aria-hidden="false" aria-label="track_changes icon" fontIcon="track_changes"
                                         class="c_btn" (click)="openModalAddCategoryChange(element._id,element?.categoryId?._id)">
                                     </mat-icon>
 
-                                    <mat-icon *appHasRole="['WARD-CHANGE']"  aria-hidden="false" aria-label="meeting_room icon" fontIcon="meeting_room"
+                                    <mat-icon matTooltip="Ward Change"  matTooltipPosition="left" title="Ward Change"  *appHasRole="['WARD-CHANGE']"  aria-hidden="false" aria-label="meeting_room icon" fontIcon="meeting_room"
                                         class="c_btn" (click)="openModalAddWardChange(element._id,element?.wardId?._id)">
                                     </mat-icon>
 
-                                    <mat-icon *appHasRole="['MEMBER-EDIT']"  aria-hidden="false" aria-label="edit icon" fontIcon="edit"
+                                    <mat-icon matTooltip="Edit Members" matTooltipPosition="left"  title="Edit" *appHasRole="['MEMBER-EDIT']"  aria-hidden="false" aria-label="edit icon" fontIcon="edit"
                                       class="c_btn" [routerLink]="['/members/edit',element?._id]">
                                     </mat-icon>
-                                      <ng-container *ngIf="(element?.closType!==0) && (element?.isAdmit==1)">
-                                        <mat-icon *appHasRole="['MEMBER-DISCHARGE']"  aria-hidden="false" aria-label="check_circle icon" fontIcon="check_circle"
+                                      <ng-container *ngIf="(element?.closType!==0) && (element?.isAdmit===1)">
+                                        <mat-icon matTooltip="Discharge Person" matTooltipPosition="left"  *appHasRole="['MEMBER-DISCHARGE']"  aria-hidden="false" aria-label="check_circle icon" fontIcon="check_circle"
                                             class="c_btn" (click)="openModalAddDischarge(element._id)">
                                         </mat-icon>
                                       </ng-container>

@@ -29,7 +29,7 @@ import { MatTooltipModule } from '@angular/material/tooltip';
 declare var bootstrap: any;
 
 @Component({
-  selector: 'app-sample',
+  selector: 'app-missing-person',
   imports: [
     CardComponent,
     MatTableModule,
@@ -52,35 +52,47 @@ declare var bootstrap: any;
     HasRoleDirective,
     MatTooltipModule
   ],
-  templateUrl: './sample.component.html',
-  styleUrl: './sample.component.scss'
+  templateUrl: './missing-person.component.html',
+  styleUrl: './missing-person.component.scss'
 })
-export class SampleComponent {
-
+export class MissingPersonComponent {
   // Component variables
   sampleDetailModal: any;
   AssignSampleModal: any;
-  addTreatmentModal:any;
-  categoryChangeModal:any;
-  wardChangeModal:any;
+  addTreatmentModal: any;
+  categoryChangeModal: any;
+  wardChangeModal: any;
 
-  genders:any = '';
-  genderData = [{name:'Male',id:1},{name:'Female', id:2},{name:'Others',id:3}];
-  homeData = [{name:'Hospital',id:2},{name:'Home', id:1}];
+  genders: any = '';
+  genderData = [
+    { name: 'Male', id: 1 },
+    { name: 'Female', id: 2 },
+    { name: 'Others', id: 3 }
+  ];
+  homeData = [
+    { name: 'Hospital', id: 2 },
+    { name: 'Home', id: 1 }
+  ];
 
   //// 1: Dealth /////  2: Family Reunite ///   3:Escape // 4:family Member
 
-  closeType = [{name:'No Closure',id:0},{name:'Death',id:1},{name:'Family Reunite', id:2},{name:'Escape',id:3},{name:'Family Member', id:4}]
+  closeType = [
+    { name: 'No Closure', id: 0 },
+    { name: 'Death', id: 1 },
+    { name: 'Family Reunite', id: 2 },
+    { name: 'Escape', id: 3 },
+    { name: 'Family Member', id: 4 }
+  ];
 
+  displayedColumns = ['srno', 'photo', 'missingName', 'age', 'address', 'missingDate', 'status', 'reporter', 'createdAt'];
 
-
-  dischargeModal:any;
+  dischargeModal: any;
 
   closeTypes = [
-      { label: 'Death', value: 1 },
-      { label: 'Family Reunite', value: 2 },
-      { label: 'Escape', value: 3 },
-      { label: 'NGO Family Member', value: 4 }
+    { label: 'Death', value: 1 },
+    { label: 'Family Reunite', value: 2 },
+    { label: 'Escape', value: 3 },
+    { label: 'NGO Family Member', value: 4 }
   ];
 
   startpoint: number = 0;
@@ -92,10 +104,7 @@ export class SampleComponent {
   name: any;
   pageSize: any;
   dataSource = new MatTableDataSource<any>([]);
-  userData:any = [];
-
-  // Displayed columns are dynamically set based on user role
-  displayedColumns: string[] = [];
+  userData: any = [];
 
   @ViewChild(MatPaginator) paginator: MatPaginator;
   @ViewChild('fileInput') fileInput: ElementRef;
@@ -107,7 +116,7 @@ export class SampleComponent {
   retailerTotal: any;
   allCategoriesMini: any;
   allCompanies: any;
-  userType:any = '';
+  userType: any = '';
 
   // Reactive Form for assigning samples
   issueSampleForm = new FormGroup({
@@ -130,13 +139,13 @@ export class SampleComponent {
     company: undefined,
     startdate: null,
     enddate: null,
-    gender:undefined,
-    isHome:undefined,
-    closeType:undefined
+    gender: undefined,
+    isHome: undefined,
+    closeType: undefined
   };
 
   isCompanyLoggedIn: boolean = false;
-  categoryId:any = "";
+  categoryId: any = '';
 
   constructor(
     private sampleService: SampleService,
@@ -146,36 +155,26 @@ export class SampleComponent {
     private toastr: ToastrService,
     private spinner: NgxSpinnerService,
     private activatedRoute: ActivatedRoute,
-    private wardService:CompanyService
+    private wardService: CompanyService
   ) {
     this.setDisplayedColumns();
   }
 
   // Configure displayed columns based on user role
   setDisplayedColumns(): void {
-    this.displayedColumns = [
-      'srno',
-      'name',
-      'barcode',
-      'totalItems',
-      'leftItems',
-      'ageRange',
-      'status',
-      'createdAt',
-      'preview'
-    ];
+    // this.displayedColumns = ['srno', 'name', 'barcode', 'totalItems', 'leftItems', 'ageRange', 'status', 'createdAt', 'preview'];
 
-    if (this.userDataService.roleMatch(['SAMPLE-ASSIGN'])) {
-      this.displayedColumns.push('assignSample');
-    }
-    if (this.userDataService.roleMatch(['SAMPLE-EDIT'])) {
-      this.displayedColumns.push('action');
-    }
+    // if (this.userDataService.roleMatch(['SAMPLE-ASSIGN'])) {
+    //   this.displayedColumns.push('assignSample');
+    // }
+    // if (this.userDataService.roleMatch(['SAMPLE-EDIT'])) {
+    //   this.displayedColumns.push('action');
+    // }
   }
 
   isTodaySample: any = false;
   ngOnInit(): void {
-    this.isTodaySample = this.activatedRoute.snapshot.queryParamMap.get("isTodaySample");
+    this.isTodaySample = this.activatedRoute.snapshot.queryParamMap.get('isTodaySample');
     if (this.isTodaySample === 'true') {
       const today = new Date();
       this.sampleSearch.startdate = today;
@@ -189,7 +188,7 @@ export class SampleComponent {
 
     if (this.userData) {
       this.userType = this.userData?.data?.userType;
-      if(this.userType==2) {
+      if (this.userType == 2) {
         this.sampleSearch.company = this.userData?.data?.assignedWard;
       }
     }
@@ -197,7 +196,6 @@ export class SampleComponent {
     this.getAllSamples(null);
     this.getAllCategories();
     this.fetchWards(undefined);
-
   }
 
   // Handle filter change
@@ -244,8 +242,8 @@ export class SampleComponent {
 
   // Check if user has a company linked and fetch data accordingly
   getCompanyData() {
-    let userData:any = this.userDataService.getData();
-    let companyData:any = userData.company;
+    let userData: any = this.userDataService.getData();
+    let companyData: any = userData.company;
     if (!!companyData) {
       this.isCompanyLoggedIn = true;
       this.sampleSearch.company = companyData._id;
@@ -265,30 +263,26 @@ export class SampleComponent {
 
     ///
     const addTreatmentModal = document.getElementById('addTreatmentModal');
-    if(addTreatmentModal) {
+    if (addTreatmentModal) {
       this.addTreatmentModal = new bootstrap.Modal(addTreatmentModal);
     }
 
     //
     const categoryChangeModal = document.getElementById('categoryChangeModal');
-    if(categoryChangeModal) {
+    if (categoryChangeModal) {
       this.categoryChangeModal = new bootstrap.Modal(categoryChangeModal);
     }
 
-
     //
     const wardChangeModal = document.getElementById('wardChangeModal');
-    if(wardChangeModal) {
+    if (wardChangeModal) {
       this.wardChangeModal = new bootstrap.Modal(wardChangeModal);
     }
 
-
     const closePersonModal = document.getElementById('closePersonModal');
-    if(wardChangeModal) {
+    if (wardChangeModal) {
       this.dischargeModal = new bootstrap.Modal(closePersonModal);
     }
-
-
   }
 
   // Generate barcode using JsBarcode
@@ -304,7 +298,7 @@ export class SampleComponent {
         displayValue: true
       });
     } else {
-      console.warn("Barcode element or sample code missing");
+      console.warn('Barcode element or sample code missing');
     }
   }
 
@@ -330,27 +324,25 @@ export class SampleComponent {
     this.sampleDetailModal.show();
   }
 
-  openModalAddTreatment(personId:any){
+  openModalAddTreatment(personId: any) {
     this.sampleId = personId;
     this.addTreatmentModal.show();
   }
 
-
-  openModalAddCategoryChange(personId:any,categoryId:any) {
+  openModalAddCategoryChange(personId: any, categoryId: any) {
     this.categoryId = categoryId;
-    this.addCategory.patchValue({categoryId:categoryId});
+    this.addCategory.patchValue({ categoryId: categoryId });
     this.sampleId = personId;
     this.categoryChangeModal.show();
   }
 
-  openModalAddWardChange(personId:any,wardId:any) {
-    this.addWard.patchValue({wardId:wardId});
+  openModalAddWardChange(personId: any, wardId: any) {
+    this.addWard.patchValue({ wardId: wardId });
     this.sampleId = personId;
     this.wardChangeModal.show();
   }
 
-
-  openModalAddDischarge(personId:any) {
+  openModalAddDischarge(personId: any) {
     this.sampleId = personId;
     this.dischargeModal.show();
   }
@@ -360,19 +352,17 @@ export class SampleComponent {
     this.sampleDetailModal.hide();
   }
 
-  hideAddTreatment(){
+  hideAddTreatment() {
     this.addTreatmentModal.hide();
   }
 
-  hideCategoryChange(){
+  hideCategoryChange() {
     this.categoryChangeModal.hide();
   }
 
-  hideWardChange(){
+  hideWardChange() {
     this.wardChangeModal.hide();
   }
-
-
 
   // Fetch single sample data by ID
   getSingleSample(sampleId: any) {
@@ -418,19 +408,19 @@ export class SampleComponent {
       startdate: this.sampleSearch.startdate || undefined,
       enddate: this.sampleSearch.enddate || undefined,
       wardId: this.sampleSearch.company || undefined,
-      gender:this.sampleSearch.gender || undefined,
-      isHome:this.sampleSearch.isHome || undefined,
+      gender: this.sampleSearch.gender || undefined,
+      isHome: this.sampleSearch.isHome || undefined,
       closeType: this.sampleSearch.closeType || undefined
     };
-    if(data.isHome===1) {
+    if (data.isHome === 1) {
       this.fetchWards('Home');
-    } else if(data.isHome===2) {
+    } else if (data.isHome === 2) {
       this.fetchWards('Hospital');
     } else {
       this.fetchWards(undefined);
     }
 
-    this.sampleService.allSamples(data).subscribe({
+    this.sampleService.allMembers(data).subscribe({
       next: (result) => {
         if (result?.success) {
           this.total = result.total ?? 0;
@@ -445,16 +435,16 @@ export class SampleComponent {
         }
       },
       error: (error: any) => {
-        let errorMsg = "An unexpected error occurred.";
+        let errorMsg = 'An unexpected error occurred.';
         if (error.status === 0) {
-          errorMsg = "Server not reachable. Please check your network connection.";
+          errorMsg = 'Server not reachable. Please check your network connection.';
         } else if (error.error?.message) {
           errorMsg = error.error.message;
         } else if (error.message) {
           errorMsg = error.message;
         }
-        this.toastr.error(errorMsg, "Error");
-        console.error("Sample Fetch Error:", error);
+        this.toastr.error(errorMsg, 'Error');
+        console.error('Sample Fetch Error:', error);
       },
       complete: () => this.spinner.hide()
     });
@@ -468,9 +458,9 @@ export class SampleComponent {
     const swalWithBootstrapButtons = Swal.mixin({
       customClass: {
         confirmButton: 'btn btn-success',
-        cancelButton: 'btn btn-danger',
+        cancelButton: 'btn btn-danger'
       },
-      buttonsStyling: false,
+      buttonsStyling: false
     });
 
     swalWithBootstrapButtons
@@ -481,46 +471,41 @@ export class SampleComponent {
         showCancelButton: true,
         confirmButtonText: `${action}`,
         cancelButtonText: 'Cancel',
-        reverseButtons: true,
+        reverseButtons: true
       })
       .then((result) => {
         if (result.isConfirmed) {
-          this.sampleService
-            .enableDisableSample({ _id: element._id, isBlocked: newStatus })
-            .subscribe({
-              next: (v: any) => {
-                if (v.success) {
-                  element.isBlocked = newStatus;
-                  this.toastr.success(`Sample ${action.toLowerCase()}ed successfully.`);
-                } else {
-                  this.toastr.error(v.message, 'Error');
-                }
-              },
-              error: (e: any) => {
-                this.toastr.error(e.message, 'Error');
-              },
-            });
+          this.sampleService.enableDisableSample({ _id: element._id, isBlocked: newStatus }).subscribe({
+            next: (v: any) => {
+              if (v.success) {
+                element.isBlocked = newStatus;
+                this.toastr.success(`Sample ${action.toLowerCase()}ed successfully.`);
+              } else {
+                this.toastr.error(v.message, 'Error');
+              }
+            },
+            error: (e: any) => {
+              this.toastr.error(e.message, 'Error');
+            }
+          });
         }
       });
     return false;
   }
 
-
-  submitAddTreatment(){
-
-    let data:any = {};
-    data.remarks = this.addTreatment.value.remarks??"";
-    if(this.sampleId) {
+  submitAddTreatment() {
+    let data: any = {};
+    data.remarks = this.addTreatment.value.remarks ?? '';
+    if (this.sampleId) {
       data.personId = this.sampleId;
     }
 
     this.spinner.show();
 
-     this.sampleService.addTreatment(data).subscribe({
+    this.sampleService.addTreatment(data).subscribe({
       next: (res: any) => {
         this.spinner.hide();
         if (res.success) {
-
           this.hideAddTreatment();
           this.toastr.success(res.message, 'Success');
         } else {
@@ -537,44 +522,34 @@ export class SampleComponent {
     });
   }
 
-
-
-
   addTreatment = new FormGroup({
-    remarks: new FormControl("",[Validators.required]),
+    remarks: new FormControl('', [Validators.required])
   });
 
-
-
   addCategory = new FormGroup({
-    remarks: new FormControl("",[Validators.required]),
-    _id: new FormControl(""),
-    categoryId: new FormControl('',[Validators.required])
-  })
+    remarks: new FormControl('', [Validators.required]),
+    _id: new FormControl(''),
+    categoryId: new FormControl('', [Validators.required])
+  });
 
+  addWard = new FormGroup({
+    remarks: new FormControl('', [Validators.required]),
+    _id: new FormControl(''),
+    wardId: new FormControl('', [Validators.required])
+  });
 
-  addWard= new FormGroup({
-    remarks: new FormControl("",[Validators.required]),
-    _id: new FormControl(""),
-    wardId: new FormControl('',[Validators.required])
-  })
+  submitCategoryChange() {
+    let data: any = this.addCategory.value;
 
-
-
-  submitCategoryChange(){
-
-    let data:any = this.addCategory.value;
-
-    if(this.sampleId) {
+    if (this.sampleId) {
       data._id = this.sampleId;
     }
     this.spinner.show();
 
-     this.sampleService.addCategoryLogs(data).subscribe({
+    this.sampleService.addCategoryLogs(data).subscribe({
       next: (res: any) => {
         this.spinner.hide();
         if (res.success) {
-
           this.hideCategoryChange();
           this.toastr.success(res.message, 'Success');
         } else {
@@ -591,22 +566,18 @@ export class SampleComponent {
     });
   }
 
+  submitWardChange() {
+    let data: any = this.addWard.value;
 
-
-   submitWardChange(){
-
-    let data:any = this.addWard.value;
-
-    if(this.sampleId) {
+    if (this.sampleId) {
       data._id = this.sampleId;
     }
     this.spinner.show();
 
-     this.sampleService.addWardLogs(data).subscribe({
+    this.sampleService.addWardLogs(data).subscribe({
       next: (res: any) => {
         this.spinner.hide();
         if (res.success) {
-
           this.hideWardChange();
           this.toastr.success(res.message, 'Success');
         } else {
@@ -623,20 +594,16 @@ export class SampleComponent {
     });
   }
 
-
-
-
   addDischarge = new FormGroup({
-     remarks: new FormControl(""),
-  })
-
+    remarks: new FormControl('')
+  });
 
   // Category dropdown data
   categories: any[] = [];
 
-  wardData:any = [];
+  wardData: any = [];
 
-   // Fetch all unblocked categories
+  // Fetch all unblocked categories
   getAllCategories() {
     this.categoryService.allCategories({ isBlocked: false }).subscribe({
       next: (result) => {
@@ -650,25 +617,23 @@ export class SampleComponent {
     });
   }
 
-  fetchWards(type:any){
-     this.wardService.allCompanies({type:type}).subscribe({
-        next: (result) => {
-          this.spinner.hide();
-          if (result.success) {
-            this.wardData = result.data;
-          }
-        },
-        error: (e: any) => {
-          this.spinner.hide();
-          this.toastr.error(e.message, 'Error');
-        },
-      });
+  fetchWards(type: any) {
+    this.wardService.allCompanies({ type: type }).subscribe({
+      next: (result) => {
+        this.spinner.hide();
+        if (result.success) {
+          this.wardData = result.data;
+        }
+      },
+      error: (e: any) => {
+        this.spinner.hide();
+        this.toastr.error(e.message, 'Error');
+      }
+    });
   }
 
-
-
-  closeForm:any = new FormGroup({
-    closeType:new FormControl(null, Validators.required),
+  closeForm: any = new FormGroup({
+    closeType: new FormControl(null, Validators.required),
     remarks: new FormControl('', Validators.required),
 
     wardId: new FormControl(null),
@@ -678,75 +643,56 @@ export class SampleComponent {
     fanotherPhone: new FormControl(''),
     froofType: new FormControl(''),
     famproofNo: new FormControl(''),
-    faddress:new FormControl(''),
+    faddress: new FormControl('')
   });
-
 
   handleCloseTypeChanges() {
-  this.closeForm.get('closeType')?.valueChanges.subscribe((value:any )=> {
+    this.closeForm.get('closeType')?.valueChanges.subscribe((value: any) => {
+      // Reset all dynamic validators
+      this.closeForm.get('wardId')?.clearValidators();
+      this.clearFamilyValidators();
 
-    // Reset all dynamic validators
-    this.closeForm.get('wardId')?.clearValidators();
-    this.clearFamilyValidators();
+      if (value == 4) {
+        this.closeForm.get('wardId')?.setValidators(Validators.required);
+      }
 
-    if (value == 4) {
-      this.closeForm.get('wardId')?.setValidators(Validators.required);
-    }
+      if (value == 2) {
+        this.setFamilyValidators();
+      }
 
-    if (value == 2) {
-      this.setFamilyValidators();
-    }
+      this.closeForm.get('wardId')?.updateValueAndValidity();
+      this.updateFamilyValidity();
+    });
+  }
 
-    this.closeForm.get('wardId')?.updateValueAndValidity();
-    this.updateFamilyValidity();
-  });
-}
+  setFamilyValidators() {
+    // this.closeForm.get('fname')?.setValidators(Validators.required);
+    // this.closeForm.get('fphone')?.setValidators(Validators.required);
+    // this.closeForm.get('fproofType')?.setValidators(Validators.required);
+    // this.closeForm.get('fproofNo')?.setValidators(Validators.required);
+    // this.closeForm.get('faddress')?.setValidators(Validators.required);
+  }
 
+  clearFamilyValidators() {
+    const fields = ['fname', 'fphone', 'fanotherPhone', 'fproofType', 'fproofNo', 'faddress'];
 
+    fields.forEach((field) => {
+      this.closeForm.get(field)?.clearValidators();
+    });
+  }
 
-setFamilyValidators() {
-  // this.closeForm.get('fname')?.setValidators(Validators.required);
-  // this.closeForm.get('fphone')?.setValidators(Validators.required);
-  // this.closeForm.get('fproofType')?.setValidators(Validators.required);
-  // this.closeForm.get('fproofNo')?.setValidators(Validators.required);
-  // this.closeForm.get('faddress')?.setValidators(Validators.required);
-}
+  updateFamilyValidity() {
+    const fields = ['fname', 'fphone', 'fanotherPhone', 'fproofType', 'fproofNo', 'faddress'];
 
-clearFamilyValidators() {
-  const fields = [
-    'fname',
-    'fphone',
-    'fanotherPhone',
-    'fproofType',
-    'fproofNo',
-    'faddress'
-  ];
+    fields.forEach((field) => {
+      this.closeForm.get(field)?.updateValueAndValidity();
+    });
+  }
 
-  fields.forEach(field => {
-    this.closeForm.get(field)?.clearValidators();
-  });
-}
+  submitCloseForm() {
+    let data: any = this.closeForm.value;
 
-updateFamilyValidity() {
-  const fields = [
-    'fname',
-    'fphone',
-    'fanotherPhone',
-    'fproofType',
-    'fproofNo',
-    'faddress'
-  ];
-
-  fields.forEach(field => {
-    this.closeForm.get(field)?.updateValueAndValidity();
-  });
-}
-
-submitCloseForm() {
-
-   let data:any = this.closeForm.value;
-
-    if(this.sampleId) {
+    if (this.sampleId) {
       data.personId = this.sampleId;
     }
     this.spinner.show();
@@ -768,17 +714,13 @@ submitCloseForm() {
         this.spinner.hide();
       }
     });
-}
+  }
 
-hideCloseModal(){
-  this.dischargeModal.hide();
-}
+  hideCloseModal() {
+    this.dischargeModal.hide();
+  }
 
-
-isCategoryDisabled = (item: any) => {
-  return item._id === this.categoryId;
-};
-
-
-
+  isCategoryDisabled = (item: any) => {
+    return item._id === this.categoryId;
+  };
 }

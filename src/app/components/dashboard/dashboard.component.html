@@ -7,7 +7,7 @@
       <div class="row">
         <!-- Home Count -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true">
+          <app-card [hidHeader]="true" [routerLink]="['/members']">
             <h6 class="mb-2">Total Home</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-home f-30 m-r-10" style="color:#003E53;"></i>
@@ -18,7 +18,7 @@
 
         <!-- Hospital Count -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true">
+          <app-card [hidHeader]="true" [routerLink]="['/members']">
             <h6 class="mb-2">Total Hospital</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-activity f-30 m-r-10" style="color:#003E53;"></i>
@@ -29,7 +29,7 @@
 
         <!-- Total Categories -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true" routerLink="/categories">
+          <app-card [hidHeader]="true" (click)="conditionalRouting('/categories')">
             <h6 class="mb-2">Total Categories</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-layers f-30 m-r-10" style="color:#003E53;"></i>
@@ -40,7 +40,7 @@
 
         <!-- Total Wards -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true" routerLink="/wards">
+          <app-card [hidHeader]="true" (click)="conditionalRouting('/wards')">
             <h6 class="mb-2">Total Wards</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-grid f-30 m-r-10" style="color:#003E53;"></i>
@@ -51,7 +51,7 @@
 
         <!-- Total Ward Incharge -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true" routerLink="/ward-incharge">
+          <app-card [hidHeader]="true" (click)="conditionalRouting('/users')">
             <h6 class="mb-2">Total Ward Incharge</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-user-check f-30 m-r-10" style="color:#003E53;"></i>
@@ -62,7 +62,7 @@
 
         <!-- Total Discharged -->
         <div class="col-md-6 col-xl-4">
-          <app-card [hidHeader]="true" routerLink="/discharge">
+          <app-card [hidHeader]="true" [routerLink]="['/members']">
             <h6 class="mb-2">Total Discharged</h6>
             <h3 class="f-w-300 d-flex align-items-center m-b-0">
               <i class="feather icon-log-out f-30 m-r-10" style="color:#003E53;"></i>
@@ -167,7 +167,7 @@
                   </tr>
                 </thead>
                 <tbody style="height:300px; overflow-y: auto;">
-                  <tr *ngFor="let p of dashboardData?.recentPeople; let i=index">
+                  <tr *ngFor="let p of dashboardData?.recentPeople; let i=index" [routerLink]="['/members']">
                     <td>{{i+1}}</td>
 
                     <td>{{p?.name}}</td>

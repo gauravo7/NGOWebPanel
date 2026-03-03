@@ -59,7 +59,7 @@ export class WardsComponent {
       name: new FormControl('', [Validators.required]),
       category_image: new FormControl('', [Validators.required]),
       location:new FormControl(''),
-      gender: new FormControl(1), // 1 Male // 2: Female
+      gender: new FormControl<any>(1), // 1 Male // 2: Female
       description: new FormControl('')
     });
 
@@ -84,7 +84,7 @@ export class WardsComponent {
 
     ngAfterViewInit() {
       this.dataSource.paginator = this.paginator;
-      const modalElement = document.getElementById('categoryModal');
+      const modalElement = document.getElementById('wardModal');
       if (modalElement) {
         this.categoryModal = new bootstrap.Modal(modalElement);
       }
@@ -142,6 +142,7 @@ export class WardsComponent {
               this.categoryForm.patchValue({
                 name: v.data?.name,
                 category_image: v.data?.image,
+                gender:v?.data?.type
               });
             } else {
               this.toastr.error(v.message);

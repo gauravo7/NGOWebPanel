@@ -1,0 +1,99 @@
+<div class="row">
+  <div class="col-xl-12">
+    <app-card cardTitle="Basic Table" [options]="false"
+      blockClass="table-border-style">
+
+      <div class="row align-items-center mb-3 gx-2">
+        <div class="col-9 col-md-6">
+          <h5 class="mb-0 text-dark fw-bold">Scan or Match Persons</h5>
+        </div>
+      </div>
+
+      <hr>
+
+      <!-- 🔹 Upload Form -->
+      <form (ngSubmit)="scanPerson()" [formGroup]="scanForm" class="mt-4"
+        enctype="multipart/form-data">
+        <div class="mb-3">
+          <label class="form-label fw-bold">Upload Photo</label>
+          <input
+            type="file"
+            class="form-control"
+            accept="image/*"
+            (change)="onFileSelect($event)"
+            required />
+        </div>
+
+        <button type="submit" class="btn btn-sm btn-primary w-100"
+          [disabled]>Scan Now</button>
+      </form>
+
+      <div class="col-md-12">
+        <h5 class="fw-bold mb-3">Matched Persons ({{scanResults.length}})</h5>
+
+        <div *ngFor="let p of scanResults"
+          class="card shadow-sm mb-3 border-0 p-3">
+
+          <div class="d-flex align-items-center">
+
+            <!-- Image -->
+            <img [src]="BASE_IMAGE_URL+p.imagePath" class="rounded"
+              style="width:70px; height:70px; object-fit:cover;">
+
+            <div class="ms-3 w-100">
+
+              <h5 class="fw-bold mb-1">
+                {{ p.name }}
+                <span *ngIf="p.age" class="text-muted small"> {{ p.regNo }}</span>
+              </h5>
+
+
+              <!-- Name + Age -->
+              <h6 class="fw-bold mb-1">
+                {{ p.name }}
+                <span *ngIf="p.age" class="text-muted small"> ({{ p.age }}
+                  yrs)</span>
+              </h6>
+
+              <!-- Gender -->
+              <p class="mb-1 small text-muted">
+                Gender : {{ (p?.gender === 1 ? 'Male' : p?.gender === 2 ?
+                'Female' : '-') }}
+              </p>
+
+              <!-- Date -->
+              <p class="mb-1 small text-muted">
+                Date : {{ p.date | date:'medium' }}
+              </p>
+
+              <!-- Similarity Bar -->
+              <div class="mt-2">
+                <div class="d-flex justify-content-between">
+                  <span class="small fw-bold">Similarity</span>
+                  <span class="small fw-bold">
+                    {{ (p.similarity * 100) | number:'1.0-0' }}%
+                  </span>
+                </div>
+
+                <div class="progress mt-1" style="height:5px;">
+                  <div class="progress-bar"
+                    role="progressbar"
+                    [style.width.%]="p.similarity * 100"
+                    [ngClass]="{
+                      'bg-success': p.similarity >= 0.60,
+                      'bg-warning': p.similarity >= 0.30 && p.similarity < 0.60,
+                      'bg-danger': p.similarity < 0.30
+                   }">
+                  </div>
+                </div>
+              </div>
+
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+    </app-card>
+  </div>
+</div>

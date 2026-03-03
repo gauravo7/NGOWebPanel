@@ -16,7 +16,7 @@ import { NgSelectModule } from '@ng-select/ng-select';
 import { NgToggleModule } from 'ng-toggle-button';
 import { CardComponent } from 'src/app/shared/components/card/card.component';
 import { NgxSpinnerService } from 'ngx-spinner';
-import { RouterLink } from '@angular/router';
+import {  RouterLink,Router } from '@angular/router';
 
 
 
@@ -79,7 +79,8 @@ export class DashboardComponent implements OnInit {
     private dashboardService: DashboardService,
     private userDataService: UserDataService,
     private toastr: ToastrService,
-    private spinner: NgxSpinnerService
+    private spinner: NgxSpinnerService,
+    private router:Router
   ) {
     this.setDisplayedColumns();
     this.setRecentDistributorsDisplayedColumns();
@@ -200,6 +201,12 @@ export class DashboardComponent implements OnInit {
     });
   }
 
+
+  conditionalRouting(route:any){
+    if(this.userType==1) {
+      this.router.navigate([route]);
+    }
+  }
 
 
 }

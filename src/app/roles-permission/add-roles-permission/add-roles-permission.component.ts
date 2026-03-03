@@ -87,7 +87,9 @@ export class AddRolesPermissionComponent {
         { name: 'MEMBER-IN', checked: false },
         { name: 'MEMBER-OUT', checked: false },
         { name: 'MEMBER-ADD-TREATMENT', checked: false },
-        { name: 'MEMBER-VIEW-TREATMENT', checked: false }
+        { name: 'MEMBER-VIEW-TREATMENT', checked: false },
+        { name: 'MEMBER-SCAN', checked: false },
+        { name: 'MISSING-LIST', checked: false },
       ]
     },
     {

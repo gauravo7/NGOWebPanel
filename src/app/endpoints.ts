@@ -119,6 +119,9 @@ export const ALL_WARD_LOGS = 'wardLog/all'
 
 export const ADD_DISCHARGE = 'treatment/discharge'
 export const BULK_ADD_PEOPLE = 'people/bulk'
+export const SCAN_PEOPLE = 'scan'
+export const MISSING_ALL = 'missing/all'
+
 
 
 

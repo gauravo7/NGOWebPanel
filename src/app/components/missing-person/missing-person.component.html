@@ -1,0 +1,257 @@
+<nav aria-label="breadcrumb">
+  <ol class="breadcrumb">
+    <li class="breadcrumb-item">
+      <a routerLink="/dashboard" style="color: #003E53;">Dashboard</a>
+    </li>
+    <li class="breadcrumb-item active" aria-current="page">Missing Persons</li>
+  </ol>
+</nav>
+
+<div class="row">
+  <div class="col-xl-12">
+    <app-card cardTitle="Basic Table" [options]="false"
+      blockClass="table-border-style">
+      <div class="row align-items-center gx-2 gy-2">
+
+        <!-- Page Title -->
+        <div class="col-12 col-md-6 col-lg-6">
+          <h5 class="mb-0 text-dark fw-bold">Missing Persons List</h5>
+        </div>
+
+        <!-- Actions: Add Button + Date Filter -->
+        <div
+          class="col-12 col-md-6 col-lg-6 d-flex justify-content-md-end flex-wrap align-items-center gap-2">
+
+          <!-- Add Button -->
+          @if (userDataService?.roleMatch(['MISSING-ADD'])) {
+          <button type="button"
+            class="btn btn-sm btn-primary rounded-2 d-flex align-items-center justify-content-center p-0"
+            style="width: 25px; height: 25px;" routerLink="/members/add">
+            <mat-icon fontIcon="add"></mat-icon>
+          </button>
+          }
+
+          <!-- Date Filter -->
+          <mat-form-field appearance="fill" class="m-0"
+            style="min-width: 240px;" (click)="picker.open()">
+            <mat-label>Filter by Added Date</mat-label>
+            <mat-date-range-input [rangePicker]="picker">
+              <input matStartDate placeholder="Start Date"
+                [(ngModel)]="sampleSearch.startdate" readonly />
+              <input matEndDate placeholder="End Date"
+                [(ngModel)]="sampleSearch.enddate"
+                (dateChange)="getAllSamples(null)" readonly />
+            </mat-date-range-input>
+            <div matSuffix class="d-flex align-items-center gap-1">
+              @if (sampleSearch.startdate || sampleSearch.enddate) {
+              <mat-icon (click)="clearDateRange()" class="clear-icon"
+                style="cursor: pointer;">close</mat-icon>
+              } @else {
+              <mat-datepicker-toggle [for]="picker"></mat-datepicker-toggle>
+              }
+            </div>
+            <mat-date-range-picker #picker></mat-date-range-picker>
+          </mat-form-field>
+
+        </div>
+      </div>
+
+      <hr class="m-0 p-0">
+      <!-- <hr class="m-0 p-0"> -->
+
+      <!-- Filter Row -->
+      <!-- <div class="row align-items-end">
+
+        <div class="col-12 col-sm-6 col-lg-2">
+          <mat-form-field class="dense w-100">
+            <mat-label>Search by Reg No/Name</mat-label>
+            <input matInput [(ngModel)]="sampleSearch.name" name="name"
+              (input)="onNameInputChange($event)">
+          </mat-form-field>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-3">
+          <ng-select [items]="wardData" [disabled]="userType===2"
+            bindLabel="name" bindValue="_id" placeholder="Select Ward"
+            [(ngModel)]="sampleSearch.company" name="company"
+            (change)="sampleFilter($event)">
+          </ng-select>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-2">
+          <ng-select [items]="genderData" bindLabel="name" bindValue="id"
+            placeholder="Select Gender" [(ngModel)]="sampleSearch.gender"
+            name="company" (change)="sampleFilter($event)">
+          </ng-select>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-2">
+          <ng-select [items]="categories" bindLabel="name" bindValue="_id"
+            placeholder="Select Category" [(ngModel)]="sampleSearch.category"
+            name="category" (change)="sampleFilter($event)">
+          </ng-select>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-1">
+          <ng-select [items]="homeData" bindLabel="name" bindValue="id"
+            placeholder="Home/Hospital" [(ngModel)]="sampleSearch.isHome"
+            name="ishome" (change)="sampleFilter($event)">
+          </ng-select>
+        </div>
+
+        <div class="col-12 col-sm-6 col-lg-2">
+          <ng-select [items]="closeType" bindLabel="name" bindValue="id"
+            placeholder="Case Closure" [(ngModel)]="sampleSearch.closeType"
+            name="closeType" (change)="sampleFilter($event)">
+          </ng-select>
+        </div>
+      </div> -->
+
+      <h6 class="my-2 text-primary fw-bold">Total Members:
+        <strong>{{total}}</strong></h6>
+
+      <div class="table-responsive">
+        <div class="mat-elevation-z8">
+
+          <table mat-table [dataSource]="dataSource"
+            class="table-bordered compact-table">
+
+            <!-- Sr No -->
+            <ng-container matColumnDef="srno">
+              <th mat-header-cell *matHeaderCellDef> Sr. No </th>
+              <td mat-cell *matCellDef="let row; let index = index">
+                {{ index + 1 + (paginator.pageIndex * paginator.pageSize) }}
+              </td>
+            </ng-container>
+
+            <!-- Photo -->
+            <ng-container matColumnDef="photo">
+              <th mat-header-cell *matHeaderCellDef>Image</th>
+              <td mat-cell *matCellDef="let element">
+                <a [href]="getImg(element.missingPhotoUrl)" target="_blank">
+                  <img
+                    [src]="getImg(element.missingPhotoUrl)"
+                    class="rounded-circle logo-img"
+                    alt="Missing Photo"
+                    [title]="element.missingName" />
+                </a>
+              </td>
+            </ng-container>
+
+            <!-- Missing Name -->
+            <ng-container matColumnDef="missingName">
+              <th mat-header-cell *matHeaderCellDef>Name</th>
+              <td mat-cell *matCellDef="let element">
+                <div class="d-flex align-items-center gap-2">
+
+                  <div>
+                    <div class="fw-bold" style="cursor:pointer">
+                      {{ element.missingName }}
+                    </div>
+                    <small class="text-muted fs-7">
+                      Age: {{ element.missingAge }} years
+                    </small>
+                  </div>
+                </div>
+              </td>
+            </ng-container>
+
+            <!-- Missing Age -->
+            <ng-container matColumnDef="age">
+              <th mat-header-cell *matHeaderCellDef>Age</th>
+              <td mat-cell *matCellDef="let element"> {{ element.missingAge }}
+              </td>
+            </ng-container>
+
+            <!-- Missing Address -->
+            <ng-container matColumnDef="address">
+              <th mat-header-cell *matHeaderCellDef>Address</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.missingAddress || '-' }}
+              </td>
+            </ng-container>
+
+            <!-- Missing Date -->
+            <ng-container matColumnDef="missingDate">
+              <th mat-header-cell *matHeaderCellDef>Missing Date</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.missingDate | date:'short' }}
+              </td>
+            </ng-container>
+
+            <!-- Status -->
+            <ng-container matColumnDef="status">
+              <th mat-header-cell *matHeaderCellDef>Status</th>
+              <td mat-cell *matCellDef="let element">
+                <div [ngSwitch]="element.status">
+                  <span *ngSwitchCase="0">ACTIVE</span>
+                  <span *ngSwitchCase="1">OPEN</span>
+                  <span *ngSwitchCase="2">FOUND</span>
+                  <span *ngSwitchDefault>CLOSED</span>
+                </div>
+
+              </td>
+            </ng-container>
+
+            <!-- Reporter Info -->
+            <ng-container matColumnDef="reporter">
+              <th mat-header-cell *matHeaderCellDef>Reporter</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.reporterName }} <br>
+                <small class="text-muted">{{ element?.reporterEmail }}</small> <br>
+                <small class="text-muted">{{ element.reporterPhone }}</small>
+              </td>
+            </ng-container>
+
+            <!-- Added On -->
+            <ng-container matColumnDef="createdAt">
+              <th mat-header-cell *matHeaderCellDef>Added On</th>
+              <td mat-cell *matCellDef="let element">
+                {{ element.createdAt | date:'dd/MM/yyyy' }} <br>
+                <small>{{ element.createdAt | date:'hh:mm a' }}</small>
+              </td>
+            </ng-container>
+
+            <!-- Actions -->
+            <ng-container matColumnDef="actions">
+              <th mat-header-cell *matHeaderCellDef
+                class="text-center">Actions</th>
+              <td mat-cell *matCellDef="let element" class="text-center">
+                <!-- <mat-icon class="c_btn"
+                  matTooltip="View Details"
+                  fontIcon="visibility"
+                  (click)="viewMissing(element._id)">
+                </mat-icon> -->
+
+                <!-- <mat-icon class="c_btn"
+                  matTooltip="Edit Missing"
+                  fontIcon="edit"
+                  (click)="editMissing(element._id)">
+                </mat-icon> -->
+              </td>
+            </ng-container>
+
+            <tr mat-header-row *matHeaderRowDef="displayedColumns"
+              class="t_head"></tr>
+            <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+            <tr class="mat-row" *matNoDataRow>
+              <td class="mat-cell text-center"
+                [attr.colspan]="displayedColumns.length">
+                No data available
+              </td>
+            </tr>
+          </table>
+        </div>
+      </div>
+
+      <mat-paginator #paginator [length]="total" [pageSize]="10"
+        [pageSizeOptions]="[10, 20, 50, 100]"
+        (page)="getAllSamples($event)">
+      </mat-paginator>
+
+    </app-card>
+  </div>
+</div>
+
+
